@@ -21,7 +21,7 @@ namespace ar
         
         glGenBuffers(1, &buffer);
         
-        this->manager = manager
+		this->manager = manager;
         this->indexCount = indexCount;
         
         return glGetError() == GL_NO_ERROR;

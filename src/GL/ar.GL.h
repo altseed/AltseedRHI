@@ -2,8 +2,8 @@
 #pragma once
 
 #if defined(_WIN32)
-#include <windows.h>
-#include <gl/GL.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #endif
 
 #if defined(__APPLE__)
