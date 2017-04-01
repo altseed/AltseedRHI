@@ -40,6 +40,13 @@ namespace ar
 		}
 	}
 
+	enum class GraphicsDeviceType : int32_t
+	{
+		Default,
+		DirectX11,
+		OpenGL,
+	};
+
 	enum class ColorSpaceType : int32_t
 	{
 		GammaSpace = 0,	///< ガンマスペース

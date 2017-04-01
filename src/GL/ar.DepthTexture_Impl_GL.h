@@ -12,10 +12,7 @@ namespace ar
 		: public RenderTexture2D
 	{
 	private:
-		//ID3D11Texture2D*			depthBuffer = nullptr;
-		//ID3D11DepthStencilView*		depthStencilView = nullptr;
-		//ID3D11ShaderResourceView*	depthSRV = nullptr;
-
+		GLuint	buffer = 0;
 
 	public:
 		DepthTexture_Impl_GL();
@@ -23,6 +20,8 @@ namespace ar
 		virtual ~DepthTexture_Impl_GL();
 
 		bool Initialize(Manager* manager, int32_t width, int32_t height);
+
+		GLuint GetBuffer() const { return buffer; }
 	};
 
 }

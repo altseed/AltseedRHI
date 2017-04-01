@@ -39,32 +39,35 @@ namespace ar
 
 	void Context_Impl_GL::Draw(const DrawParameter& param)
 	{
-		/*
-		auto vb = (VertexBuffer_Impl_DX11*)param.VertexBufferPtr;
-		auto ib = (IndexBuffer_Impl_DX11*)param.IndexBufferPtr;
-		auto shader = (Shader_Impl_DX11*)param.ShaderPtr;
+		auto vb = (VertexBuffer_Impl_GL*)param.VertexBufferPtr;
+		auto ib = (IndexBuffer_Impl_GL*)param.IndexBufferPtr;
+		auto shader = (Shader_Impl_GL*)param.ShaderPtr;
 
-		// Set vertex buffer
-		auto vbuf = vb->GetBuffer();
-		uint32_t vertexSize = vb->GetVertexSize();
-		uint32_t voffset = 0;
-		context->IASetVertexBuffers(0, 1, &vbuf, &vertexSize, &voffset);
-		
-		// Set index buffer
-		context->IASetIndexBuffer(ib->GetBuffer(), DXGI_FORMAT_R16_UINT, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vb->GetBuffer());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->GetBuffer());
 
-		// Set shader
-		context->VSSetShader(shader->GetVertexShader(), NULL, 0);
-		context->PSSetShader(shader->GetPixelShader(), NULL, 0);
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		context->IASetInputLayout(shader->GetInputLayout());
+		glUseProgram(shader->GetShader());
 
-		// Draw
-		int32_t vertexBufferOffset = 0;
-		context->DrawIndexed(
-			ib->GetIndexCount(),
-			0,
-			vertexBufferOffset);
-		*/
+		const void* vertices = NULL;
+
+		for (auto& layout : shader->GetLayouts())
+		{
+			if (layout.attribute == 0) continue;
+
+			glEnableVertexAttribArray(layout.attribute);
+			glVertexAttribPointer(layout.attribute, layout.count, layout.type, layout.normalized, vb->GetVertexSize(), (uint8_t*)vertices + layout.offset);
+		}
+
+		glDrawElements(GL_TRIANGLES, ib->GetIndexCount(), GL_UNSIGNED_SHORT, NULL);
+
+		for (auto& layout : shader->GetLayouts())
+		{
+			if (layout.attribute >= 0)
+			{
+				glDisableVertexAttribArray(layout.attribute);
+			}
+		}
+
+		glUseProgram(0);
 	}
 }
