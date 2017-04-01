@@ -1,4 +1,4 @@
-
+﻿
 #include "ar.IndexBuffer_Impl_DX11.h"
 
 #include "ar.Manager_Impl_DX11.h"

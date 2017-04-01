@@ -111,26 +111,43 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ar.Base.h" />
-    <ClInclude Include="..\src\DirectX11\ar.ConstantBuffer_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.Context_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.DepthTexture_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.IndexBuffer_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.Manager_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.RenderTexture2D_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.Shader_Impl_DX11.h" />
-    <ClInclude Include="..\src\DirectX11\ar.VertexBuffer_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.Context_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.DepthTexture_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.IndexBuffer_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.Manager_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.RenderTexture2D_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.Shader_Impl_DX11.h" />
+    <ClInclude Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.h" />
+    <ClInclude Include="..\src\GL\ar.ConstantBuffer_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.Context_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.DepthTexture_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.GL.h" />
+    <ClInclude Include="..\src\GL\ar.IndexBuffer_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.Manager_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.RenderTexture2D_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.Shader_Impl_GL.h" />
+    <ClInclude Include="..\src\GL\ar.VertexBuffer_Impl_GL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ar.Base.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.ConstantBuffer_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.Context_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.DepthTexture_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.IndexBuffer_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.Manager_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.RenderTexture2D_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.Shader_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DirectX11\ar.VertexBuffer_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.Context_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.DepthTexture_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.IndexBuffer_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.Manager_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.RenderTexture2D_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.Shader_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\GL\ar.ConstantBuffer_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.Context_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.DepthTexture_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.IndexBuffer_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.Manager_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.RenderTexture2D_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.Shader_Impl_GL.cpp" />
+    <ClCompile Include="..\src\GL\ar.VertexBuffer_Impl_GL.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

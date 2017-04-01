@@ -1,27 +1,29 @@
-
-#include "ar.Manager_Impl_DX11.h"
+ï»¿
+#include "ar.Manager_Impl_GL.h"
 
 namespace ar
 {
 
-	Manager_Impl_DX11::Manager_Impl_DX11()
+	Manager_Impl_GL::Manager_Impl_GL()
 	{
 
 	}
 
-	Manager_Impl_DX11::~Manager_Impl_DX11()
+	Manager_Impl_GL::~Manager_Impl_GL()
 	{
-		SafeRelease(device);
-		SafeRelease(context);
-		SafeRelease(dxgiFactory);
-		SafeRelease(adapter);
-		SafeRelease(swapChain);
-		SafeRelease(defaultBack);
-		SafeRelease(defaultBackRenderTargetView);
+		//SafeRelease(device);
+		//SafeRelease(context);
+		//SafeRelease(dxgiFactory);
+		//SafeRelease(adapter);
+		//SafeRelease(swapChain);
+		//SafeRelease(defaultBack);
+		//SafeRelease(defaultBackRenderTargetView);
 	}
 
-	ErrorCode Manager_Impl_DX11::Initialize(const ManagerInitializationParameter& param)
+	ErrorCode Manager_Impl_GL::Initialize(const ManagerInitializationParameter& param)
 	{
+		return ErrorCode::OK;
+		/*
 		HRESULT hr;
 		ErrorCode result;
 		std::vector<IDXGIAdapter1*>	adapters;
@@ -165,10 +167,12 @@ namespace ar
 		SafeRelease(defaultBackRenderTargetView);
 
 		return result;
+		*/
 	}
 
-	void Manager_Impl_DX11::BeginScene(const SceneParameter& param)
+	void Manager_Impl_GL::BeginScene(const SceneParameter& param)
 	{
+		/*
 		if (param.RenderTargets[0] == nullptr)
 		{
 			context->OMSetRenderTargets(1, &defaultBackRenderTargetView, nullptr);
@@ -183,16 +187,15 @@ namespace ar
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		context->RSSetViewports(1, &vp);
+		*/
 	}
 
-	void Manager_Impl_DX11::EndScene()
+	void Manager_Impl_GL::EndScene()
 	{
 
 	}
 
-	void Manager_Impl_DX11::Present()
+	void Manager_Impl_GL::Present()
 	{
-		// “¯Šú‚µ‚È‚¢
-		swapChain->Present(0, 0);
-	}
+    }
 }

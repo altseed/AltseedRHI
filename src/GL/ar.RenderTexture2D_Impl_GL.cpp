@@ -1,26 +1,27 @@
+﻿
+#include "ar.RenderTexture2D_Impl_GL.h"
 
-#include "ar.RenderTexture2D_Impl_DX11.h"
-
-#include "ar.Manager_Impl_DX11.h"
+#include "ar.Manager_Impl_GL.h"
 
 namespace ar
 {
 
-	RenderTexture2D_Impl_DX11::RenderTexture2D_Impl_DX11()
+	RenderTexture2D_Impl_GL::RenderTexture2D_Impl_GL()
 	{
 
 	}
 
-	RenderTexture2D_Impl_DX11::~RenderTexture2D_Impl_DX11()
+	RenderTexture2D_Impl_GL::~RenderTexture2D_Impl_GL()
 	{
-		SafeRelease(texture);
-		SafeRelease(textureSRV);
-		SafeRelease(textureRTV);
+		//SafeRelease(texture);
+		//SafeRelease(textureSRV);
+		//SafeRelease(textureRTV);
 	}
 
 
-	bool RenderTexture2D_Impl_DX11::Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format)
+	bool RenderTexture2D_Impl_GL::Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format)
 	{
+		/*
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
 
@@ -97,6 +98,7 @@ namespace ar
 		SafeRelease(texture);
 		SafeRelease(textureSRV);
 		SafeRelease(textureRTV);
+		*/
 		return false;
 	}
 }

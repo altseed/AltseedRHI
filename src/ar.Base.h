@@ -1,9 +1,10 @@
-
+ï»¿
 #pragma once
 
 #include <stdint.h>
 
 #include <array>
+#include <string>
 #include <vector>
 
 namespace ar
@@ -41,8 +42,8 @@ namespace ar
 
 	enum class ColorSpaceType : int32_t
 	{
-		GammaSpace = 0,	///< ƒKƒ“ƒ}ƒXƒy[ƒX
-		LinearSpace = 1, ///< ƒŠƒjƒAƒXƒy[ƒX
+		GammaSpace = 0,	///< ã‚¬ãƒ³ãƒžã‚¹ãƒšãƒ¼ã‚¹
+		LinearSpace = 1, ///< ãƒªãƒ‹ã‚¢ã‚¹ãƒšãƒ¼ã‚¹
 	};
 
 	enum class TextureFormat : int32_t
@@ -199,7 +200,7 @@ namespace ar
 
 	class VertexBuffer
 	{
-	private:
+	protected:
 		int32_t			vertexSize = 0;
 		int32_t			vertexCount = 0;
 
