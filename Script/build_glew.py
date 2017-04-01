@@ -1,16 +1,18 @@
 import aceutils
 
-pathname = 'glew'
+pathname = 'glew-1.13.0'
 
 aceutils.cdToScript()
 aceutils.mkdir('../Downloads')
-aceutils.mkdir(r"../include/")
-aceutils.mkdir(r"../lib/")
 
 with aceutils.CurrentDir('../Downloads'):
+	aceutils.rm(r'glew-1.13.0.zip')
+	aceutils.rmdir(pathname)
 	aceutils.rmdir(r"glew_bin")
 	aceutils.rmdir(r"glew_bin_x64")
 
+	aceutils.wget(r'https://sourceforge.net/projects/glew/files/glew/1.13.0/glew-1.13.0.zip')
+	aceutils.unzip(r'glew-1.13.0.zip')
 	aceutils.editCmakeForACE(pathname + r'/build/cmake/CMakeLists.txt')
 	aceutils.mkdir(r"glew_bin")
 	aceutils.mkdir(r"glew_bin_x64")
@@ -21,10 +23,10 @@ with aceutils.CurrentDir('../Downloads'):
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Debug')
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Release')
 		elif aceutils.isMac():
-			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX:PATH=.. "-DCMAKE_OSX_ARCHITECTURES=x86_64;i386" ../' + pathname + '/build/cmake')
+			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX:PATH=../Dev "-DCMAKE_OSX_ARCHITECTURES=x86_64;i386" ../' + pathname + '/build/cmake')
 			aceutils.call(r'make install')
 		else:
-			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX=.. ../' + pathname + '/')
+			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX=../Dev ../' + pathname + '/')
 			aceutils.call(r'make install')
 
 	with aceutils.CurrentDir('glew_bin_x64'):
@@ -33,9 +35,8 @@ with aceutils.CurrentDir('../Downloads'):
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Debug')
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Release')
 
-	aceutils.mkdir(r"../include/GLFW/")
-
 	if aceutils.isWin():
+		aceutils.mkdir(r'../lib/')
 		aceutils.mkdir(r'../lib/x86/')
 		aceutils.mkdir(r'../lib/x86/Debug')
 		aceutils.mkdir(r'../lib/x86/Release')
