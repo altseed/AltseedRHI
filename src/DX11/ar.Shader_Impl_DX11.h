@@ -16,6 +16,12 @@ namespace ar
 		ID3D11PixelShader*			pixelShader = nullptr;
 		ID3D11InputLayout*			inputLayout = nullptr;
 
+		void Reflect(
+			std::map<std::string, ConstantLayout>& dst_constant,
+			int32_t& constantSize,
+			std::map<std::string, TextureLayout>& dst_texture,
+			int32_t& textureCount, 
+			void* buf, int32_t bufSize);
 	public:
 		Shader_Impl_DX11();
 

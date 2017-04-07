@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AltseedRHI_Win", "msvc\AltseedRHI_Win.vcxproj", "{D33CE683-4EEA-40ED-9E63-4C1EDDB0A020}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Altseed_RHI_Test", "msvc\Altseed_RHI_Test.vcxproj", "{5E2963A1-EFB1-46C6-8080-CA1E0C70905A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AltseedRHI_Test", "msvc\AltseedRHI_Test.vcxproj", "{5E2963A1-EFB1-46C6-8080-CA1E0C70905A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D33CE683-4EEA-40ED-9E63-4C1EDDB0A020} = {D33CE683-4EEA-40ED-9E63-4C1EDDB0A020}
 	EndProjectSection

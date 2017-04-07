@@ -34,6 +34,9 @@ namespace ar
 		// Unbind texture
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		this->width = width;
+		this->height = height;
+
 		return true;
 	}
 }

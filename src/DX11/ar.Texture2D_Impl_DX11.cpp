@@ -1,17 +1,19 @@
 ﻿
-#include "ar.RenderTexture2D_Impl_DX11.h"
+#include "ar.Texture2D_Impl_DX11.h"
 
 #include "ar.Manager_Impl_DX11.h"
+
+#include "../ar.ImageHelper.h"
 
 namespace ar
 {
 
-	RenderTexture2D_Impl_DX11::RenderTexture2D_Impl_DX11()
+	Texture2D_Impl_DX11::Texture2D_Impl_DX11()
 	{
 
 	}
 
-	RenderTexture2D_Impl_DX11::~RenderTexture2D_Impl_DX11()
+	Texture2D_Impl_DX11::~Texture2D_Impl_DX11()
 	{
 		SafeRelease(texture);
 		SafeRelease(textureSRV);
@@ -19,7 +21,7 @@ namespace ar
 	}
 
 
-	bool RenderTexture2D_Impl_DX11::Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format)
+	bool Texture2D_Impl_DX11::Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable)
 	{
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
@@ -61,12 +63,16 @@ namespace ar
 		TexDesc.SampleDesc.Count = 1;
 		TexDesc.SampleDesc.Quality = 0;
 		TexDesc.Usage = D3D11_USAGE_DEFAULT;
-		TexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		TexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		TexDesc.CPUAccessFlags = 0;
 		TexDesc.MiscFlags = 0;
 
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = data;
+		initData.SysMemPitch = width * ImageHelper::GetPitch(format);
+		initData.SysMemSlicePitch = initData.SysMemPitch * height;
 
-		hr = m->GetDevice()->CreateTexture2D(&TexDesc, nullptr, &texture);
+		hr = m->GetDevice()->CreateTexture2D(&TexDesc, data != nullptr ? &initData : nullptr, &texture);
 		if (FAILED(hr))
 		{
 			goto End;
@@ -89,6 +95,20 @@ namespace ar
 		if (FAILED(hr))
 		{
 			goto End;
+		}
+
+		if (isEditable)
+		{
+			resource.resize(width * height *  ImageHelper::GetPitch(format));
+			
+			if (data != nullptr)
+			{
+				memcpy(resource.data(), data, resource.size());
+			}
+			else
+			{
+				memset(resource.data(), 0, resource.size());
+			}
 		}
 
 		this->width = width;

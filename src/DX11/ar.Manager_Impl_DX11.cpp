@@ -1,8 +1,22 @@
 ﻿
 #include "ar.Manager_Impl_DX11.h"
 
+#include "ar.RenderTexture2D_Impl_DX11.h"
+#include "ar.DepthTexture_Impl_DX11.h"
+
 namespace ar
 {
+	void Manager_Impl_DX11::SetViewport(int32_t x, int32_t y, int32_t width, int32_t height)
+	{
+		D3D11_VIEWPORT vp;
+		vp.TopLeftX = x;
+		vp.TopLeftY = y;
+		vp.Width = (float)width;
+		vp.Height = (float)height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		context->RSSetViewports(1, &vp);
+	}
 
 	Manager_Impl_DX11::Manager_Impl_DX11()
 	{
@@ -147,6 +161,9 @@ namespace ar
 			a->Release();
 		}
 
+		windowWidth = param.WindowWidth;
+		windowHeight = param.WindowHeight;
+
 		result = ErrorCode::OK;
 		return result;
 
@@ -169,20 +186,43 @@ namespace ar
 
 	void Manager_Impl_DX11::BeginScene(const SceneParameter& param)
 	{
+		// reset
+		for (int32_t i = 0; i < MaxTextureCount; i++)
+		{
+			ID3D11ShaderResourceView* rv = { nullptr };
+			GetContext()->VSSetShaderResources(i, 1, &rv);
+			GetContext()->PSSetShaderResources(i, 1, &rv);
+		}
+
 		if (param.RenderTargets[0] == nullptr)
 		{
 			context->OMSetRenderTargets(1, &defaultBackRenderTargetView, nullptr);
+			SetViewport(0, 0, windowWidth, windowHeight);
+		}
+		else
+		{
+			ID3D11RenderTargetView* rt[MaxRenderTarget] = { nullptr, nullptr, nullptr, nullptr };
+			ID3D11DepthStencilView* ds = nullptr;
+
+			for (int32_t i = 0; i < MaxRenderTarget; i++)
+			{
+				if (param.RenderTargets[i] == nullptr) continue;
+
+				rt[i] = ((RenderTexture2D_Impl_DX11*)param.RenderTargets[i])->GetRenderTargetView();
+			}
+
+			if (param.DepthTarget != nullptr)
+			{
+				ds = ((DepthTexture_Impl_DX11*)param.DepthTarget)->GetDepthStencilView();
+			}
+
+			if (rt != nullptr)
+			{
+				context->OMSetRenderTargets(4, rt, ds);
+				SetViewport(0, 0, param.RenderTargets[0]->GetWidth(), param.RenderTargets[0]->GetHeight());
+			}
 		}
 
-		// Temp
-		D3D11_VIEWPORT vp;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		vp.Width = (float)640;
-		vp.Height = (float)480;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		context->RSSetViewports(1, &vp);
 	}
 
 	void Manager_Impl_DX11::EndScene()

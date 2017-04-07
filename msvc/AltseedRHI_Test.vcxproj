@@ -19,32 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D33CE683-4EEA-40ED-9E63-4C1EDDB0A020}</ProjectGuid>
-    <RootNamespace>AltseedRHI_Win</RootNamespace>
+    <ProjectGuid>{5E2963A1-EFB1-46C6-8080-CA1E0C70905A}</ProjectGuid>
+    <RootNamespace>Altseed_RHI_Test</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -69,38 +69,40 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>AltseedRHI</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>AltseedRHI</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>AltseedRHI</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>AltseedRHI</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/;../include/;../Downloads/AltseedPlatform/src/;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Lib>
-      <AdditionalLibraryDirectories>..\lib\</AdditionalLibraryDirectories>
-    </Lib>
+    <Link>
+      <AdditionalLibraryDirectories>../lib/</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/;../include/;../Downloads/AltseedPlatform/src/;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Lib>
-      <AdditionalLibraryDirectories>..\lib\</AdditionalLibraryDirectories>
-    </Lib>
+    <Link>
+      <AdditionalLibraryDirectories>../lib/</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -109,15 +111,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/;../include/;../Downloads/AltseedPlatform/src/;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../lib/</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\lib\</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -126,75 +127,22 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/;../include/;../Downloads/AltseedPlatform/src/;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../lib/</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\lib\</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\3rdParty\DirectXToolKit\dds.h" />
-    <ClInclude Include="..\src\3rdParty\DirectXToolKit\DDSTextureLoader.h" />
-    <ClInclude Include="..\src\3rdParty\DirectXToolKit\DirectXHelpers.h" />
-    <ClInclude Include="..\src\3rdParty\DirectXToolKit\PlatformHelpers.h" />
-    <ClInclude Include="..\src\3rdParty\nv_dds\nv_dds.h" />
-    <ClInclude Include="..\src\ar.Base.h" />
-    <ClInclude Include="..\src\ar.BaseInternal.h" />
-    <ClInclude Include="..\src\ar.ImageHelper.h" />
-    <ClInclude Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.Context_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.DepthTexture_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.IndexBuffer_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.Manager_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.RenderTexture2D_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.Shader_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.Texture2D_Impl_DX11.h" />
-    <ClInclude Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.h" />
-    <ClInclude Include="..\src\GL\ar.ConstantBuffer_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.Context_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.CubemapTexture_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.DepthTexture_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.GL.h" />
-    <ClInclude Include="..\src\GL\ar.IndexBuffer_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.Manager_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.RenderTexture2D_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.Shader_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.Texture2D_Impl_GL.h" />
-    <ClInclude Include="..\src\GL\ar.VertexBuffer_Impl_GL.h" />
-    <ClInclude Include="..\src\Win\ar.PNGHelper_Impl_Win.h" />
+    <ClCompile Include="..\src_test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\3rdParty\DirectXToolKit\DDSTextureLoader.cpp" />
-    <ClCompile Include="..\src\3rdParty\nv_dds\nv_dds.cpp" />
-    <ClCompile Include="..\src\ar.Base.cpp" />
-    <ClCompile Include="..\src\ar.ImageHelper.cpp" />
-    <ClCompile Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.Context_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.DepthTexture_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.IndexBuffer_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.Manager_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.RenderTexture2D_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.Shader_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.Texture2D_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.cpp" />
-    <ClCompile Include="..\src\GL\ar.ConstantBuffer_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.Context_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.CubemapTexture_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.DepthTexture_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.IndexBuffer_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.Manager_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.RenderTexture2D_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.Shader_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.Texture2D_Impl_GL.cpp" />
-    <ClCompile Include="..\src\GL\ar.VertexBuffer_Impl_GL.cpp" />
-    <ClCompile Include="..\src\Win\ar.PNGHelper_Impl_Win.cpp" />
+    <ProjectReference Include="AltseedRHI_Win.vcxproj">
+      <Project>{d33ce683-4eea-40ed-9e63-4c1eddb0a020}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

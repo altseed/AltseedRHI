@@ -1,15 +1,27 @@
-
+﻿
 #include <stdio.h>
 
 #include <ap.Window.h>
+#include <ap.Joystick.h>
+
 #include <ar.Base.h>
+#include <ar.ImageHelper.h>
+
 
 #include <iostream>
 #include <fstream>
 
-#if defined(_OTHER)
 
-#else
+#if defined(_PSVITA)
+#include "PSVITA.h"
+
+#elif defined(_PS4)
+
+#elif defined(_SWITCH)
+
+#elif defined(_XBOXONE)
+
+#elif defined(_WIN32)
 
 #ifdef _WIN64
 
@@ -34,8 +46,12 @@
 #endif
 
 #pragma comment(lib,"opengl32.lib")
+#pragma comment(lib, "gdiplus.lib")
+
+#else
 
 #endif
+
 
 struct SimpleVertex
 {
@@ -49,6 +65,39 @@ struct SimpleVertex
 	}
 };
 
+bool LoadFile(std::vector<uint8_t>& dst, const char* path)
+{
+	auto fp = fopen(path, "rb");
+	if (fp == nullptr) return false;
+	fseek(fp, 0, SEEK_END);
+	auto size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	dst.resize(size);
+
+	fread(dst.data(), 1, size, fp);
+
+	fclose(fp);
+
+	return true;
+}
+
+
+
+struct LoadTextureInfo
+{
+	ar::Manager* manager = nullptr;
+	ar::Texture2D* texture = nullptr;
+};
+
+void loadTexture(const uint8_t* data, int32_t width, int32_t height, void* userData)
+{
+	auto p = (LoadTextureInfo*)userData;
+
+	p->texture = ar::Texture2D::Create();
+	p->texture->Initialize(p->manager, width, height, ar::TextureFormat::R8G8B8A8_UNORM, (void*)data, false);
+}
+
 int main()
 {
 	auto window = ap::Window::Create();
@@ -60,17 +109,16 @@ int main()
 
 	window->Initialize(wparam);
 
-	auto manager = ar::Manager::Create();
+	auto joystick = ap::Joystick::Create(window);
 
+	auto manager = ar::Manager::Create();
 	ar::ManagerInitializationParameter mparam;
-	mparam.Handles[0] = window->GetHandle();
+
+	mparam.Handles[0] = nullptr;
 	mparam.WindowWidth = 640;
 	mparam.WindowHeight = 480;
 	manager->Initialize(mparam);
-
-	auto context = ar::Context::Create();
-	context->Initialize(manager);
-
+	
 	auto vertexBuffer = ar::VertexBuffer::Create();
 	vertexBuffer->Initialize(manager, sizeof(SimpleVertex), 4);
 
@@ -83,7 +131,19 @@ int main()
 	vbuffer[2].y = -1.0f;
 	vbuffer[3].x = -1.0f;
 	vbuffer[3].y = -1.0f;
+
+	vbuffer[0].u = 0;
+	vbuffer[0].v = 0;
+	vbuffer[1].u = 1;
+	vbuffer[1].v = 0;
+	vbuffer[2].u = 1;
+	vbuffer[2].v = 1;
+	vbuffer[3].u = 0;
+	vbuffer[3].v = 1;
+
 	vbuffer[3].r = 255;
+	vbuffer[3].g = 255;
+	vbuffer[3].b = 255;
 	vbuffer[3].a = 255;
 
 	vertexBuffer->Write(vbuffer.data(), sizeof(SimpleVertex) * 4);
@@ -112,31 +172,32 @@ int main()
 	vertexLayouts[2].Name = "Color";
 	vertexLayouts[2].LayoutFormat = ar::VertexLayoutFormat::R8G8B8A8_UNORM;
 
-	std::ifstream fin_vs("HLSL/simple_VS.dat", std::ios::in | std::ios::binary);
+	std::string rootPath = "HLSL/";
+#if defined(_WIN32)
+#else
+	rootPath = RootPath;
+#endif
+
 	std::vector<uint8_t> shader_vs;
-	while (!fin_vs.eof())
-	{
-		uint8_t d;
-		fin_vs.read((char *)&d, 1);
-		shader_vs.push_back(d);
-	}
-	shader_vs.pop_back();
-
-	fin_vs.close();
-
-	std::ifstream fin_ps("HLSL/simple_PS.dat", std::ios::in | std::ios::binary);
 	std::vector<uint8_t> shader_ps;
-	while (!fin_ps.eof())
-	{
-		uint8_t d;
-		fin_ps.read((char *)&d, 1);
-		shader_ps.push_back(d);
-	}
-	shader_ps.pop_back();
 
-	fin_ps.close();
+	LoadFile(shader_vs, (rootPath + "texture_VS.dat").c_str());
+	LoadFile(shader_ps, (rootPath + "texture_PS.dat").c_str());
 
 	shader->Initialize(manager, shader_vs.data(), shader_vs.size(), shader_ps.data(), shader_ps.size(), vertexLayouts);
+
+
+	auto context = ar::Context::Create();
+	context->Initialize(manager);
+
+
+	std::vector<uint8_t> textureBuf;
+	LoadFile(textureBuf, "Data/Texture01.png");
+	LoadTextureInfo ltInfo;
+	ltInfo.manager = manager;
+	ar::ImageHelper::LoadPNG(loadTexture, &ltInfo, textureBuf.data(), textureBuf.size());
+
+	ar::Texture2D* texture = ltInfo.texture;
 
 	while (window->DoEvent())
 	{
@@ -150,6 +211,7 @@ int main()
 		dparam.VertexBufferPtr = vertexBuffer;
 		dparam.IndexBufferPtr = indexBuffer;
 		dparam.ShaderPtr = shader;
+		dparam.PixelShaderTextures[0] = texture;
 
 		context->Draw(dparam);
 
@@ -158,15 +220,35 @@ int main()
 		manager->EndRendering();
 
 		manager->Present();
+
+		// apply input
+		joystick->RefreshInputState();
+
+		if (joystick->IsPresent(0))
+		{
+			if (joystick->GetJoystickType(0) == ap::JoystickType::PS4)
+			{
+				if (joystick->GetButtonState(0, ap::JoystickButtonType::Circle) == ap::InputState::Push)
+				{
+					break;
+				}
+			}
+		}
 	}
 
+	delete texture;
+
+	delete context;
+	
 	delete shader;
 	delete indexBuffer;
 	delete vertexBuffer;
 
-	delete context;
-	delete manager;
-	delete window;
 
+	delete manager;
+	
+	delete joystick;
+	delete window;
+	
 	return 0;
 }

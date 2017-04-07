@@ -56,6 +56,38 @@
     <ClInclude Include="..\src\GL\ar.VertexBuffer_Impl_GL.h">
       <Filter>GL</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\DX11\ar.Texture2D_Impl_DX11.h">
+      <Filter>DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GL\ar.Texture2D_Impl_GL.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdParty\nv_dds\nv_dds.h">
+      <Filter>3rdParty\nv_dds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdParty\DirectXToolKit\dds.h">
+      <Filter>3rdParty\DirectXToolKit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdParty\DirectXToolKit\DDSTextureLoader.h">
+      <Filter>3rdParty\DirectXToolKit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdParty\DirectXToolKit\DirectXHelpers.h">
+      <Filter>3rdParty\DirectXToolKit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdParty\DirectXToolKit\PlatformHelpers.h">
+      <Filter>3rdParty\DirectXToolKit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GL\ar.CubemapTexture_Impl_GL.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.h">
+      <Filter>DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ar.ImageHelper.h" />
+    <ClInclude Include="..\src\ar.BaseInternal.h" />
+    <ClInclude Include="..\src\Win\ar.PNGHelper_Impl_Win.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ar.Base.cpp" />
@@ -107,13 +139,47 @@
     <ClCompile Include="..\src\GL\ar.ConstantBuffer_Impl_GL.cpp">
       <Filter>GL</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\DX11\ar.Texture2D_Impl_DX11.cpp">
+      <Filter>DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GL\ar.Texture2D_Impl_GL.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\nv_dds\nv_dds.cpp">
+      <Filter>3rdParty\nv_dds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\DirectXToolKit\DDSTextureLoader.cpp">
+      <Filter>3rdParty\DirectXToolKit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GL\ar.CubemapTexture_Impl_GL.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.cpp">
+      <Filter>DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ar.ImageHelper.cpp" />
+    <ClCompile Include="..\src\Win\ar.PNGHelper_Impl_Win.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="GL">
+      <UniqueIdentifier>{bbf3c14b-f9bd-4361-92de-67e00221f14b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="DX11">
       <UniqueIdentifier>{c447db63-ec21-4669-8a4f-6708b08e8b38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GL">
-      <UniqueIdentifier>{bbf3c14b-f9bd-4361-92de-67e00221f14b}</UniqueIdentifier>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{2b05c68c-77d7-44e3-a659-656be8a769a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\DirectXToolKit">
+      <UniqueIdentifier>{76a3ca28-60c7-4240-8309-a4ec3decab19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\nv_dds">
+      <UniqueIdentifier>{1ea0b346-dca2-4e0b-a8a4-7c03ee6efb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win">
+      <UniqueIdentifier>{b166205b-7605-4b2c-901b-b86b914aed3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

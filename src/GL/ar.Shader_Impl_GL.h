@@ -24,6 +24,14 @@ namespace ar
 	private:
 		GLuint				program = 0;
 		std::vector<Layout>	layouts;
+
+		void Reflect(
+			std::map<std::string, ConstantLayout>& dst_constant,
+			int32_t& constantSize,
+			std::map<std::string, TextureLayout>& dst_texture,
+			int32_t& textureCount,
+			GLuint program);
+
 	public:
 		Shader_Impl_GL();
 

@@ -5,6 +5,117 @@
 
 namespace ar
 {
+	void Shader_Impl_GL::Reflect(
+		std::map<std::string, ConstantLayout>& dst_constant,
+		int32_t& constantSize,
+		std::map<std::string, TextureLayout>& dst_texture,
+		int32_t& textureCount,
+		GLuint program)
+	{
+		int32_t uniformCount = 0;
+		glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+		int32_t offset = 0;
+
+		for (int32_t u = 0; u < uniformCount; u++)
+		{
+			char name[256];
+			int32_t nameLen = 0;
+			GLint size = 0;
+			GLenum type;
+			glGetActiveUniform(program, u, sizeof(name), &nameLen, &size, &type, name);
+
+			if (type == GL_SAMPLER_2D)
+			{
+				TextureLayout layout;
+				layout.ID = glGetUniformLocation(program, name);
+				layout.Index = dst_texture.size();
+				dst_texture[name] = layout;
+
+			}
+			else if (type == GL_SAMPLER_CUBE)
+			{
+				TextureLayout layout;
+				layout.ID = glGetUniformLocation(program, name);
+				layout.Index = dst_texture.size();
+				dst_texture[name] = layout;
+			}
+			else
+			{
+				std::string name_ = name;
+
+				ConstantLayout l;
+				l.Index = glGetUniformLocation(program, name);
+				l.Offset = offset;
+				l.Count = size;
+
+				if (type == GL_FLOAT)
+				{
+					l.Type = ConstantBufferFormat::Float1;
+					offset += sizeof(float) * 1 * l.Count;
+				}
+				else if (type == GL_FLOAT_VEC2)
+				{
+					l.Type = ConstantBufferFormat::Float2;
+					offset += sizeof(float) * 2 * l.Count;
+				}
+				else if (type == GL_FLOAT_VEC3)
+				{
+					l.Type = ConstantBufferFormat::Float3;
+					offset += sizeof(float) * 3 * l.Count;
+				}
+				else if (type == GL_FLOAT_VEC4)
+				{
+					if (l.Count > 1)
+					{
+						l.Type = ConstantBufferFormat::Float4_ARRAY;
+						offset += sizeof(float) * 4 * l.Count;
+
+						auto result = name_.find_first_of("[");
+						if (result != std::string::npos)
+						{
+							name_ = name_.substr(0, result);
+						}
+					}
+					else
+					{
+						l.Type = ConstantBufferFormat::Float4;
+						offset += sizeof(float) * 4 * l.Count;
+					}
+				}
+				else if (type == GL_FLOAT_MAT4)
+				{
+					if (l.Count > 1)
+					{
+						l.Type = ConstantBufferFormat::Matrix44_ARRAY;
+						offset += sizeof(float) * 16 * l.Count;
+
+						auto result = name_.find_first_of("[");
+						if (result != std::string::npos)
+						{
+							name_ = name_.substr(0, result);
+						}
+					}
+					else
+					{
+						l.Type = ConstantBufferFormat::Matrix44;
+						offset += sizeof(float) * 16 * l.Count;
+					}
+				}
+				else
+				{
+					printf("unknown\n");
+					continue;
+				}
+
+				dst_constant[name_] = l;
+			}
+		}
+
+		constantSize = offset;
+		textureCount = dst_texture.size();
+	}
+
 	Shader_Impl_GL::Shader_Impl_GL()
 	{
 
@@ -134,6 +245,13 @@ namespace ar
 
 			layouts.push_back(il);
 		}
+
+		Reflect(
+			pixelConstantLayouts,
+			pixelConstantBufferSize,
+			pixelTextureLayouts,
+			pixelTextureCount,
+			program);
 
 		return true;
 

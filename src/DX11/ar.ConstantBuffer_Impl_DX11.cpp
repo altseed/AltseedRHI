@@ -11,7 +11,7 @@ namespace ar
 
 	ConstantBuffer_Impl_DX11::~ConstantBuffer_Impl_DX11()
 	{
-		SafeRelease(buffer);
+		SafeRelease(dx_buffer);
 	}
 
 	bool ConstantBuffer_Impl_DX11::Initialize(Manager* manager, int32_t size)
@@ -36,18 +36,29 @@ namespace ar
 		hSubResourceData.SysMemSlicePitch = 0;
 
 		// Create buffer
-		hr = m->GetDevice()->CreateBuffer(&hBufferDesc, NULL, &buffer);
+		hr = m->GetDevice()->CreateBuffer(&hBufferDesc, NULL, &dx_buffer);
 		if (FAILED(hr))
 		{
 			goto End;
 		}
 
+		buffer.resize(size);
+		memset(buffer.data(), 0, size);
+
+		this->manager = manager;
+
 		return true;
 
 	End:;
-		SafeRelease(buffer);
+		SafeRelease(dx_buffer);
 
 		return false;
+	}
+
+	void ConstantBuffer_Impl_DX11::UpdateDxBuffer()
+	{
+		auto m = (Manager_Impl_DX11*)manager;
+		m->GetContext()->UpdateSubresource(dx_buffer, 0, NULL, buffer.data(), 0, 0);
 	}
 }
 

@@ -23,6 +23,10 @@ namespace ar
 		virtual ~DepthTexture_Impl_DX11();
 
 		bool Initialize(Manager* manager, int32_t width, int32_t height);
+
+		ID3D11DepthStencilView* GetDepthStencilView() const { return depthStencilView; }
+
+		ID3D11ShaderResourceView* GetShaderResourceView() const { return depthSRV; }
 	};
 
 }

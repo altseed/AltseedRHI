@@ -13,92 +13,114 @@ namespace ar
 
 	RenderTexture2D_Impl_GL::~RenderTexture2D_Impl_GL()
 	{
-		//SafeRelease(texture);
-		//SafeRelease(textureSRV);
-		//SafeRelease(textureRTV);
+		glDeleteTextures(1, &texture);
 	}
 
 
 	bool RenderTexture2D_Impl_GL::Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format)
 	{
-		/*
-		auto m = (Manager_Impl_DX11*)manager;
-		HRESULT hr;
+		glGenTextures(1, &texture);
 
-		D3D11_TEXTURE2D_DESC TexDesc;
-		TexDesc.Width = width;
-		TexDesc.Height = height;
-		TexDesc.MipLevels = 1;
-		TexDesc.ArraySize = 1;
+		if (glGetError() != GL_NO_ERROR) return false;
+
+		glBindTexture(GL_TEXTURE_2D, texture);
+
 		if (format == TextureFormat::R8G8B8A8_UNORM)
 		{
-			TexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA,
+				width,
+				height,
+				0,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				nullptr);
 		}
 		else if (format == TextureFormat::R16G16B16A16_FLOAT)
 		{
-			TexDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA16F,
+				width,
+				height,
+				0,
+				GL_RGBA,
+				GL_FLOAT,
+				nullptr);
 		}
 		else if (format == TextureFormat::R32G32B32A32_FLOAT)
 		{
-			TexDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA32F,
+				width,
+				height,
+				0,
+				GL_RGBA,
+				GL_FLOAT,
+				nullptr);
 		}
 		else if (format == TextureFormat::R8G8B8A8_UNORM_SRGB)
 		{
-			TexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_SRGB8_ALPHA8,
+				width,
+				height,
+				0,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				nullptr);
 		}
 		else if (format == TextureFormat::R16G16_FLOAT)
 		{
-			TexDesc.Format = DXGI_FORMAT_R16G16_FLOAT;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RG16F,
+				width,
+				height,
+				0,
+				GL_RG,
+				GL_FLOAT,
+				nullptr);
 		}
 		else if (format == TextureFormat::R8_UNORM)
 		{
-			TexDesc.Format = DXGI_FORMAT_R8_UNORM;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_R8,
+				width,
+				height,
+				0,
+				GL_RED,
+				GL_UNSIGNED_BYTE,
+				nullptr);
 		}
 		else
 		{
-			return nullptr;
+			return false;
 		}
 
-		TexDesc.SampleDesc.Count = 1;
-		TexDesc.SampleDesc.Quality = 0;
-		TexDesc.Usage = D3D11_USAGE_DEFAULT;
-		TexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-		TexDesc.CPUAccessFlags = 0;
-		TexDesc.MiscFlags = 0;
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-
-		hr = m->GetDevice()->CreateTexture2D(&TexDesc, nullptr, &texture);
-		if (FAILED(hr))
+		if (glGetError() != GL_NO_ERROR)
 		{
-			goto End;
+			glDeleteTextures(1, &texture);
+			return false;
 		}
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
-		desc.Format = TexDesc.Format;
-		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		desc.Texture2D.MostDetailedMip = 0;
-		desc.Texture2D.MipLevels = TexDesc.MipLevels;
+		GLCheckError();
 
-		hr = m->GetDevice()->CreateShaderResourceView(texture, &desc, &textureSRV);
-		if (FAILED(hr))
-		{
-			goto End;
-		}
-
-		hr = m->GetDevice()->CreateRenderTargetView(texture, NULL, &textureRTV);
-		if (FAILED(hr))
-		{
-			goto End;
-		}
+		this->width = width;
+		this->height = height;
 
 		return true;
-
-	End:;
-		SafeRelease(texture);
-		SafeRelease(textureSRV);
-		SafeRelease(textureRTV);
-		*/
-		return false;
 	}
 }

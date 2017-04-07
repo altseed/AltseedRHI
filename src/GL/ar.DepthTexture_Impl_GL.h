@@ -21,7 +21,7 @@ namespace ar
 
 		bool Initialize(Manager* manager, int32_t width, int32_t height);
 
-		GLuint GetBuffer() const { return buffer; }
+		GLuint GetTexture() const { return buffer; }
 	};
 
 }

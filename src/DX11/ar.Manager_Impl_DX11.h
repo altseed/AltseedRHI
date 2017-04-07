@@ -19,6 +19,8 @@ namespace ar
 		ID3D11Texture2D*			defaultBack = nullptr;
 		ID3D11RenderTargetView*		defaultBackRenderTargetView = nullptr;
 
+		void SetViewport(int32_t x, int32_t y, int32_t width, int32_t height);
+
 	public:
 		Manager_Impl_DX11();
 		virtual ~Manager_Impl_DX11();

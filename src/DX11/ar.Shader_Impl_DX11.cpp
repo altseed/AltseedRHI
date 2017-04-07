@@ -1,10 +1,150 @@
-﻿
+﻿#define NOMINMAX
+
 #include "ar.Shader_Impl_DX11.h"
 
 #include "ar.Manager_Impl_DX11.h"
 
 namespace ar
 {
+	void Shader_Impl_DX11::Reflect(
+		std::map<std::string, ConstantLayout>& dst_constant,
+		int32_t& constantSize,
+		std::map<std::string, TextureLayout>& dst_texture,
+		int32_t& textureCount,
+		void* buf, int32_t bufSize)
+	{
+		auto getBufferType = [](D3D11_SHADER_TYPE_DESC typeDesc, ConstantBufferFormat& format, int32_t& elements) -> void
+		{
+			elements = 1;
+
+			if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_SCALAR && typeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT)
+			{
+				if (typeDesc.Columns == 1) format = ConstantBufferFormat::Float1;
+			}
+
+			if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_VECTOR && typeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT)
+			{
+				if (typeDesc.Columns == 2) format = ConstantBufferFormat::Float2;
+				if (typeDesc.Columns == 3) format = ConstantBufferFormat::Float3;
+
+				else if (typeDesc.Elements > 0)
+				{
+					if (typeDesc.Columns == 4)
+					{
+						elements = typeDesc.Elements;
+						format = ConstantBufferFormat::Float4_ARRAY;
+					}
+				}
+				else
+				{
+					if (typeDesc.Columns == 4) format = ConstantBufferFormat::Float4;
+				}
+			}
+
+			if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS && typeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT)
+			{
+				if (typeDesc.Rows == 4 && typeDesc.Columns == 4)
+				{
+					if (typeDesc.Elements == 0) format = ConstantBufferFormat::Matrix44;
+					if (typeDesc.Elements > 0)
+					{
+						elements = typeDesc.Elements;
+						format = ConstantBufferFormat::Matrix44_ARRAY;
+					}
+				}
+			}
+		};
+
+		auto getResourceType = [](D3D11_SHADER_INPUT_BIND_DESC bindDesc, ConstantBufferFormat& format, int32_t& bindPoint) -> bool
+		{
+			if (bindDesc.Type == D3D_SIT_TEXTURE)
+			{
+				if (bindDesc.Dimension == D3D_SRV_DIMENSION_TEXTURE2D)
+				{
+					bindPoint = bindDesc.BindPoint;
+					return true;
+				}
+				else if (bindDesc.Dimension == D3D_SRV_DIMENSION_TEXTURECUBE)
+				{
+					bindPoint = bindDesc.BindPoint;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return false;
+		};
+
+		int32_t offset = 0;
+
+		ID3D11ShaderReflection*	reflection = nullptr;
+		D3DReflect(buf, bufSize, IID_ID3D11ShaderReflection, (void**)&reflection);
+
+		D3D11_SHADER_DESC shaderDesc;
+		reflection->GetDesc(&shaderDesc);
+
+		for (int32_t i = 0; i < shaderDesc.BoundResources; i++)
+		{
+			D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+			reflection->GetResourceBindingDesc(i, &bindDesc);
+
+			ConstantBufferFormat format;
+			int32_t bindPoint = 0;
+			if (!getResourceType(bindDesc, format, bindPoint)) continue;
+			auto name = bindDesc.Name;
+
+			TextureLayout layout;
+			layout.Index = bindPoint;
+
+			dst_texture[name] = layout;
+		}
+
+		for (int32_t i = 0; i < shaderDesc.ConstantBuffers; i++)
+		{
+			auto cbuf = reflection->GetConstantBufferByIndex(i);
+
+			D3D11_SHADER_BUFFER_DESC bufferDesc;
+			cbuf->GetDesc(&bufferDesc);
+			for (int32_t j = 0; j < bufferDesc.Variables; j++)
+			{
+				auto variable = cbuf->GetVariableByIndex(j);
+				if (variable == nullptr) continue;
+
+				auto type = variable->GetType();
+
+				D3D11_SHADER_TYPE_DESC typeDesc;
+				type->GetDesc(&typeDesc);
+
+				D3D11_SHADER_VARIABLE_DESC variableDesc;
+				variable->GetDesc(&variableDesc);
+				auto name = variableDesc.Name;
+				auto size = variableDesc.Size;
+				auto startOffset = variableDesc.StartOffset;
+
+				ConstantBufferFormat format;
+				int32_t elements = 0;
+				getBufferType(typeDesc, format, elements);
+
+				offset = std::max(offset, (int32_t)(startOffset + size));
+				ConstantLayout l;
+				l.Count = elements;
+				l.Offset = startOffset;
+				l.Type = format;
+
+				dst_constant[name] = l;
+			}
+
+		}
+
+		SafeRelease(reflection);
+
+		constantSize = offset;
+		textureCount = dst_texture.size();
+	}
+
 	Shader_Impl_DX11::Shader_Impl_DX11()
 	{
 
@@ -97,6 +237,20 @@ namespace ar
 		{
 			goto End;
 		}
+
+		Reflect(
+			vertexConstantLayouts,
+			vertexConstantBufferSize,
+			vertexTextureLayouts,
+			vertexTextureCount,
+			(uint8_t*)vs, vs_size);
+
+		Reflect(
+			pixelConstantLayouts,
+			pixelConstantBufferSize,
+			pixelTextureLayouts,
+			pixelTextureCount,
+			(uint8_t*)ps, ps_size);
 
 		return true;
 

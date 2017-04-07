@@ -10,14 +10,10 @@ namespace ar
 	class Manager_Impl_GL
 		: public Manager
 	{
-		//ID3D11Device*			device = nullptr;
-		//ID3D11DeviceContext*	context = nullptr;
-		//IDXGIFactory1*		dxgiFactory = nullptr;
-		//IDXGIAdapter1*		adapter = nullptr;
-		//IDXGISwapChain*		swapChain = nullptr;
-		//
-		//ID3D11Texture2D*			defaultBack = nullptr;
-		//ID3D11RenderTargetView*		defaultBackRenderTargetView = nullptr;
+	private:
+		GLuint			frameBuffer = 0;
+
+		void SetViewport(int32_t x, int32_t y, int32_t width, int32_t height);
 
 	public:
 		Manager_Impl_GL();
@@ -30,9 +26,5 @@ namespace ar
 		void EndScene() override;
 
 		void Present() override;
-
-		//ID3D11Device* GetDevice() const { return device; }
-		//
-		//ID3D11DeviceContext* GetContext() { return context; }
 	};
 }

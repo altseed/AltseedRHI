@@ -60,6 +60,9 @@ namespace ar
 			goto End;
 		}
 
+		this->width = width;
+		this->height = height;
+
 		return true;
 
 	End:;

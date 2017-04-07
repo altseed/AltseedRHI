@@ -12,9 +12,7 @@ class RenderTexture2D_Impl_GL
 	: public RenderTexture2D
 {
 private:
-	//ID3D11Texture2D*			texture = nullptr;
-	//ID3D11ShaderResourceView*	textureSRV = nullptr;
-	//ID3D11RenderTargetView*		textureRTV = nullptr;
+	GLuint	texture = 0;
 
 public:
 	RenderTexture2D_Impl_GL();
@@ -22,6 +20,8 @@ public:
 	virtual ~RenderTexture2D_Impl_GL();
 
 	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format);
+
+	GLuint GetTexture() const { return texture; }
 };
 
 }
