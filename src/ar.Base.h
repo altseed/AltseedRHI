@@ -25,6 +25,8 @@ namespace ar
 		FailedToCreateSwapChain,
 		FailedToGetBackBuffer,
 		FailedToCreateBackBufferTarget,
+
+		FailedToInitializeGlew,
 	};
 
 	template <typename T>
@@ -300,72 +302,12 @@ namespace ar
 		}
 	};
 
-	class Texture
-	{
-	public:
-		Texture() {}
-		virtual ~Texture() {}
-
-		virtual TextureType GetType() const = 0;
-	};
-
-	class Texture2D
-		: public Texture
-	{
-	protected:
-		int32_t	width = 0;
-		int32_t height = 0;
-	public:
-		Texture2D() {}
-		virtual ~Texture2D() {}
-
-		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) { return false; }
-
-		int32_t GetWidth() const { return width; }
-
-		int32_t GetHeight() const { return height; }
-
-		TextureType GetType() const override { return TextureType::Texture2D; }
-
-		static Texture2D* Create();
-	};
-
-	class RenderTexture2D
-		: public Texture2D
-	{
-	public:
-		RenderTexture2D() {}
-		virtual ~RenderTexture2D() {}
-
-		TextureType GetType() const override { return TextureType::RenderTexture2D; }
-	};
-
-	class DepthTexture
-		: public Texture2D
-	{
-	public:
-		DepthTexture() {}
-		virtual ~DepthTexture() {}
-
-		TextureType GetType() const override { return TextureType::DepthTexture; }
-	};
-
-	class CubemapTexture
-		: public Texture
-	{
-	public:
-		CubemapTexture() {}
-		virtual ~CubemapTexture() {}
-
-		TextureType GetType() const override { return TextureType::CubemapTexture; }
-	};
-
-
 	class Manager
 	{
 	protected:
 		int32_t	windowWidth = 0;
 		int32_t	windowHeight = 0;
+		GraphicsDeviceType	deviceType = GraphicsDeviceType::Default;
 
 	public:
 
@@ -381,7 +323,9 @@ namespace ar
 
 		virtual void Present() {}
 
-		static Manager* Create();
+		GraphicsDeviceType GetDeviceType() const { return deviceType; }
+
+		static Manager* Create(GraphicsDeviceType device);
 	};
 
 	class Context
@@ -398,7 +342,7 @@ namespace ar
 
 		virtual void Draw(const DrawParameter& param) {}
 
-		static Context* Create();
+		static Context* Create(Manager* manager);
 	};
 
 	class VertexBuffer
@@ -419,7 +363,7 @@ namespace ar
 
 		int32_t GetVertexSize() const { return vertexSize; }
 
-		static VertexBuffer* Create();
+		static VertexBuffer* Create(Manager* manager);
 	};
 
 	class IndexBuffer
@@ -437,7 +381,7 @@ namespace ar
 
 		int32_t GetIndexCount() const { return indexCount; }
 
-		static IndexBuffer* Create();
+		static IndexBuffer* Create(Manager* manager);
 	};
 
 
@@ -447,7 +391,7 @@ namespace ar
 		ConstantBuffer() {}
 		virtual ~ConstantBuffer() {}
 
-		static ConstantBuffer* Create();
+		static ConstantBuffer* Create(Manager* manager);
 	};
 
 	class Shader
@@ -546,9 +490,72 @@ namespace ar
 			return -1;
 		}
 
-		static Shader* Create();
+		static Shader* Create(Manager* manager);
 	};
 
+	class Texture
+	{
+	public:
+		Texture() {}
+		virtual ~Texture() {}
 
+		virtual TextureType GetType() const = 0;
+	};
 
+	class Texture2D
+		: public Texture
+	{
+	protected:
+		int32_t	width = 0;
+		int32_t height = 0;
+	public:
+		Texture2D() {}
+		virtual ~Texture2D() {}
+
+		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) { return false; }
+
+		int32_t GetWidth() const { return width; }
+
+		int32_t GetHeight() const { return height; }
+
+		TextureType GetType() const override { return TextureType::Texture2D; }
+
+		static Texture2D* Create(Manager* manager);
+	};
+
+	class RenderTexture2D
+		: public Texture2D
+	{
+	public:
+		RenderTexture2D() {}
+		virtual ~RenderTexture2D() {}
+
+		TextureType GetType() const override { return TextureType::RenderTexture2D; }
+
+		static RenderTexture2D* Create(Manager* manager);
+	};
+
+	class DepthTexture
+		: public Texture2D
+	{
+	public:
+		DepthTexture() {}
+		virtual ~DepthTexture() {}
+
+		TextureType GetType() const override { return TextureType::DepthTexture; }
+
+		static DepthTexture* Create(Manager* manager);
+	};
+
+	class CubemapTexture
+		: public Texture
+	{
+	public:
+		CubemapTexture() {}
+		virtual ~CubemapTexture() {}
+
+		TextureType GetType() const override { return TextureType::CubemapTexture; }
+
+		static CubemapTexture* Create(Manager* manager);
+	};
 }

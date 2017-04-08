@@ -4,6 +4,8 @@
 #include "ar.RenderTexture2D_Impl_GL.h"
 #include "ar.DepthTexture_Impl_GL.h"
 
+#include "../ar.ImageHelper.h"
+
 namespace ar
 {
 	void Manager_Impl_GL::SetViewport(int32_t x, int32_t y, int32_t width, int32_t height)
@@ -13,17 +15,26 @@ namespace ar
 
 	Manager_Impl_GL::Manager_Impl_GL()
 	{
-
+		ImageHelper::Initizlize();
+		deviceType = GraphicsDeviceType::OpenGL;
 	}
 
 	Manager_Impl_GL::~Manager_Impl_GL()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glDeleteFramebuffers(1, &frameBuffer);
+
+		ImageHelper::Terminate();
 	}
 
 	ErrorCode Manager_Impl_GL::Initialize(const ManagerInitializationParameter& param)
 	{
+#ifndef __APPLE__
+		if (glewInit() != GLEW_OK)
+		{
+			return ErrorCode::FailedToInitializeGlew;
+		}
+#endif
 		// Create frame buffer
 		glGenFramebuffers(1, &frameBuffer);
 		GLCheckError();

@@ -17,7 +17,6 @@ namespace ar
 	{
 		SafeRelease(texture);
 		SafeRelease(textureSRV);
-		SafeRelease(textureRTV);
 	}
 
 
@@ -91,12 +90,6 @@ namespace ar
 			goto End;
 		}
 
-		hr = m->GetDevice()->CreateRenderTargetView(texture, NULL, &textureRTV);
-		if (FAILED(hr))
-		{
-			goto End;
-		}
-
 		if (isEditable)
 		{
 			resource.resize(width * height *  ImageHelper::GetPitch(format));
@@ -119,7 +112,6 @@ namespace ar
 	End:;
 		SafeRelease(texture);
 		SafeRelease(textureSRV);
-		SafeRelease(textureRTV);
 		return false;
 	}
 }

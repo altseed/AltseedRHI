@@ -9,7 +9,7 @@ namespace ar
 {
 
 	class DepthTexture_Impl_DX11
-		: public RenderTexture2D
+		: public DepthTexture
 	{
 	private:
 		ID3D11Texture2D*			depthBuffer = nullptr;

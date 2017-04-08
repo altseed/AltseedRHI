@@ -14,7 +14,6 @@ class Texture2D_Impl_DX11
 private:
 	ID3D11Texture2D*			texture = nullptr;
 	ID3D11ShaderResourceView*	textureSRV = nullptr;
-	ID3D11RenderTargetView*		textureRTV = nullptr;
 
 	std::vector<uint8_t>		resource;
 

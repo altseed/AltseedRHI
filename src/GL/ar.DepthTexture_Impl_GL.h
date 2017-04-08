@@ -9,7 +9,7 @@ namespace ar
 {
 
 	class DepthTexture_Impl_GL
-		: public RenderTexture2D
+		: public DepthTexture
 	{
 	private:
 		GLuint	buffer = 0;

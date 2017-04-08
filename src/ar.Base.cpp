@@ -12,6 +12,9 @@
 #include "PSVITA/ar.Shader_Impl_PSVITA.h"
 
 #include "PSVITA/ar.Texture2D_Impl_PSVITA.h"
+#include "PSVITA/ar.RenderTexture2D_Impl_PSVITA.h"
+#include "PSVITA/ar.DepthTexture_Impl_PSVITA.h"
+#include "PSVITA/ar.CubemapTexture_Impl_PSVITA.h"
 
 #elif defined(_PS4)
 
@@ -24,6 +27,9 @@
 #include "PS4/ar.Shader_Impl_PS4.h"
 
 #include "PS4/ar.Texture2D_Impl_PS4.h"
+#include "PS4/ar.RenderTexture2D_Impl_PS4.h"
+#include "PS4/ar.DepthTexture_Impl_PS4.h"
+#include "PS4/ar.CubemapTexture_Impl_PS4.h"
 
 #elif defined(_SWITCH)
 
@@ -36,6 +42,9 @@
 #include "SWITCH/ar.Shader_Impl_SWITCH.h"
 
 #include "SWITCH/ar.Texture2D_Impl_SWITCH.h"
+#include "SWITCH/ar.RenderTexture2D_Impl_SWITCH.h"
+#include "SWITCH/ar.DepthTexture_Impl_SWITCH.h"
+#include "SWITCH/ar.CubemapTexture_Impl_SWITCH.h"
 
 #elif defined(_XBOXONE)
 
@@ -48,6 +57,9 @@
 #include "XBOXONE/ar.Shader_Impl_XBOXONE.h"
 
 #include "XBOXONE/ar.Texture2D_Impl_XBOXONE.h"
+#include "XBOXONE/ar.RenderTexture2D_Impl_XBOXONE.h"
+#include "XBOXONE/ar.DepthTexture_Impl_XBOXONE.h"
+#include "XBOXONE/ar.CubemapTexture_Impl_XBOXONE.h"
 
 #elif defined(_WIN32)
 
@@ -60,6 +72,9 @@
 #include "DX11/ar.Shader_Impl_DX11.h"
 
 #include "DX11/ar.Texture2D_Impl_DX11.h"
+#include "DX11/ar.RenderTexture2D_Impl_DX11.h"
+#include "DX11/ar.DepthTexture_Impl_DX11.h"
+#include "DX11/ar.CubemapTexture_Impl_DX11.h"
 
 #include "GL/ar.Manager_Impl_GL.h"
 #include "GL/ar.Context_Impl_GL.h"
@@ -70,6 +85,9 @@
 #include "GL/ar.Shader_Impl_GL.h"
 
 #include "GL/ar.Texture2D_Impl_GL.h"
+#include "GL/ar.RenderTexture2D_Impl_GL.h"
+#include "GL/ar.DepthTexture_Impl_GL.h"
+#include "GL/ar.CubemapTexture_Impl_GL.h"
 
 #else
 
@@ -82,12 +100,15 @@
 #include "GL/ar.Shader_Impl_GL.h"
 
 #include "GL/ar.Texture2D_Impl_GL.h"
+#include "GL/ar.RenderTexture2D_Impl_GL.h"
+#include "GL/ar.DepthTexture_Impl_GL.h"
+#include "GL/ar.CubemapTexture_Impl_GL.h"
 #endif
 
 namespace ar
 {
 
-	Manager* Manager::Create()
+	Manager* Manager::Create(GraphicsDeviceType device)
 	{
 #if defined(_PSVITA)
 		return new Manager_Impl_PSVITA();
@@ -98,11 +119,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Manager_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (device == GraphicsDeviceType::OpenGL)
+		{
+			return new Manager_Impl_GL();
+		}
 		return new Manager_Impl_DX11();
 #endif
 	}
 
-	Context* Context::Create()
+	Context* Context::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new Context_Impl_PSVITA();
@@ -113,11 +138,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Context_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new Context_Impl_GL();
+		}
 		return new Context_Impl_DX11();
 #endif
 	}
 
-	VertexBuffer* VertexBuffer::Create()
+	VertexBuffer* VertexBuffer::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new VertexBuffer_Impl_PSVITA();
@@ -128,11 +157,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new VertexBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new VertexBuffer_Impl_GL();
+		}
 		return new VertexBuffer_Impl_DX11();
 #endif
 	}
 
-	IndexBuffer* IndexBuffer::Create()
+	IndexBuffer* IndexBuffer::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new IndexBuffer_Impl_PSVITA();
@@ -143,11 +176,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new IndexBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new IndexBuffer_Impl_GL();
+		}
 		return new IndexBuffer_Impl_DX11();
 #endif
 	}
 
-	ConstantBuffer* ConstantBuffer::Create()
+	ConstantBuffer* ConstantBuffer::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new ConstantBuffer_Impl_PSVITA();
@@ -158,11 +195,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new ConstantBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new ConstantBuffer_Impl_GL();
+		}
 		return new ConstantBuffer_Impl_DX11();
 #endif
 	}
 
-	Shader*Shader::Create()
+	Shader*Shader::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new Shader_Impl_PSVITA();
@@ -173,11 +214,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Shader_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new Shader_Impl_GL();
+		}
 		return new Shader_Impl_DX11();
 #endif
 	}
 
-	Texture2D*Texture2D::Create()
+	Texture2D*Texture2D::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new Texture2D_Impl_PSVITA();
@@ -188,7 +233,68 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Texture2D_Impl_XBOXONE();
 #elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new Texture2D_Impl_GL();
+		}
 		return new Texture2D_Impl_DX11();
+#endif
+	}
+
+	RenderTexture2D*RenderTexture2D::Create(Manager* manager)
+	{
+#if defined(_PSVITA)
+		return new RenderTexture2D_Impl_PSVITA();
+#elif defined(_PS4)
+		return new RenderTexture2D_Impl_PS4();
+#elif defined(_SWITCH)
+		return new RenderTexture2D_Impl_SWITCH();
+#elif defined(_XBOXONE)
+		return new RenderTexture2D_Impl_XBOXONE();
+#elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new RenderTexture2D_Impl_GL();
+		}
+		return new RenderTexture2D_Impl_DX11();
+#endif
+	}
+
+	DepthTexture* DepthTexture::Create(Manager* manager)
+	{
+#if defined(_PSVITA)
+		return new DepthTexture_Impl_PSVITA();
+#elif defined(_PS4)
+		return new DepthTexture_Impl_PS4();
+#elif defined(_SWITCH)
+		return new DepthTexture_Impl_SWITCH();
+#elif defined(_XBOXONE)
+		return new DepthTexture_Impl_XBOXONE();
+#elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new DepthTexture_Impl_GL();
+		}
+		return new DepthTexture_Impl_DX11();
+#endif
+	}
+
+	CubemapTexture*CubemapTexture::Create(Manager* manager)
+	{
+#if defined(_PSVITA)
+		return new CubemapTexture_Impl_PSVITA();
+#elif defined(_PS4)
+		return new CubemapTexture_Impl_PS4();
+#elif defined(_SWITCH)
+		return new CubemapTexture_Impl_SWITCH();
+#elif defined(_XBOXONE)
+		return new CubemapTexture_Impl_XBOXONE();
+#elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new CubemapTexture_Impl_GL();
+		}
+		return new CubemapTexture_Impl_DX11();
 #endif
 	}
 }

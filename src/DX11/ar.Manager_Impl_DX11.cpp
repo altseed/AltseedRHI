@@ -4,6 +4,8 @@
 #include "ar.RenderTexture2D_Impl_DX11.h"
 #include "ar.DepthTexture_Impl_DX11.h"
 
+#include "../ar.ImageHelper.h"
+
 namespace ar
 {
 	void Manager_Impl_DX11::SetViewport(int32_t x, int32_t y, int32_t width, int32_t height)
@@ -20,7 +22,8 @@ namespace ar
 
 	Manager_Impl_DX11::Manager_Impl_DX11()
 	{
-
+		ImageHelper::Initizlize();
+		deviceType = GraphicsDeviceType::DirectX11;
 	}
 
 	Manager_Impl_DX11::~Manager_Impl_DX11()
@@ -32,6 +35,8 @@ namespace ar
 		SafeRelease(swapChain);
 		SafeRelease(defaultBack);
 		SafeRelease(defaultBackRenderTargetView);
+
+		ImageHelper::Terminate();
 	}
 
 	ErrorCode Manager_Impl_DX11::Initialize(const ManagerInitializationParameter& param)
