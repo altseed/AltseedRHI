@@ -1,11 +1,8 @@
 
 #pragma once
 
-#include <stdio.h>
 #include <AltseedPlatform.h>
-
-#include <ar.Base.h>
-#include <ar.ImageHelper.h>
+#include <AltseedRHI.h>
 
 struct SimpleVertex
 {
