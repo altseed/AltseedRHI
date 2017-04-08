@@ -3,12 +3,12 @@
 in vec2 oUV;
 in vec4 oColor;
 
-out vec4 outColor;
+out vec4 outputColor;
 
 void main() 
 {
 	// varying(in) ‚Í•ÏX•s‰Â(Radeon)
-	vec4 uv = oUV;
+	vec2 uv = oUV;
 	uv.y = 1.0 - uv.y; 
-	outColor = oColor;
+	outputColor = oColor;
 }

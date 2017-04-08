@@ -93,8 +93,8 @@ void test_texture2d(ar::GraphicsDeviceType device)
 	std::vector<uint8_t> shader_vs;
 	std::vector<uint8_t> shader_ps;
 
-	LoadShaderFile(shader_vs, "texture2d_VS.dat");
-	LoadShaderFile(shader_ps, "texture2d_PS.dat");
+	LoadShaderFile(shader_vs, "texture2d_VS.dat", device);
+	LoadShaderFile(shader_ps, "texture2d_PS.dat", device);
 
 	shader->Initialize(manager, shader_vs.data(), shader_vs.size(), shader_ps.data(), shader_ps.size(), vertexLayouts);
 
@@ -123,7 +123,9 @@ void test_texture2d(ar::GraphicsDeviceType device)
 		dparam.ShaderPtr = shader;
 		dparam.PixelShaderTextures[0] = texture;
 
+		context->Begin();
 		context->Draw(dparam);
+		context->End();
 
 		manager->EndScene();
 
@@ -156,9 +158,10 @@ void test_texture2d(ar::GraphicsDeviceType device)
 	delete indexBuffer;
 	delete vertexBuffer;
 
-
 	delete manager;
 
 	delete joystick;
+
+	window->MakeContextNone();
 	delete window;
 }

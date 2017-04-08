@@ -142,9 +142,15 @@ namespace ar
 
 	void Context_Impl_GL::Draw(const DrawParameter& param)
 	{
+		GLCheckError();
+
 		auto vb = (VertexBuffer_Impl_GL*)param.VertexBufferPtr;
 		auto ib = (IndexBuffer_Impl_GL*)param.IndexBufferPtr;
 		auto shader = (Shader_Impl_GL*)param.ShaderPtr;
+
+		if (vb->GetBuffer() == 0) return;
+		if (ib->GetBuffer() == 0) return;
+		if (shader->GetShader() == 0) return;
 
 		UpdateRenderStates(param, false);
 
@@ -152,16 +158,18 @@ namespace ar
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->GetBuffer());
 
 		glUseProgram(shader->GetShader());
+		GLCheckError();
 
 		const void* vertices = NULL;
 
 		for (auto& layout : shader->GetLayouts())
 		{
-			if (layout.attribute == 0) continue;
+			if (layout.attribute < 0) continue;
 
 			glEnableVertexAttribArray(layout.attribute);
 			glVertexAttribPointer(layout.attribute, layout.count, layout.type, layout.normalized, vb->GetVertexSize(), (uint8_t*)vertices + layout.offset);
 		}
+		GLCheckError();
 
 		// set textures
 		for (auto& l : shader->GetPixelTextureLayouts())
@@ -169,8 +177,13 @@ namespace ar
 			glUniform1i(l.second.ID, l.second.Index);
 		}
 
-		for (int32_t i = 0; i < MaxTextureCount; i++)
+		for (int32_t i = 0; i < shader->GetPixelTextureCount(); i++)
 		{
+			if (param.PixelShaderTextures[i] == nullptr)
+			{
+				continue;
+			}
+
 			static const GLint glfilter[] = { GL_NEAREST, GL_LINEAR };
 			static const GLint glfilter_mip[] = { GL_NEAREST_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR };
 			static const GLint glwrap[] = { GL_REPEAT, GL_CLAMP_TO_EDGE };
@@ -179,24 +192,24 @@ namespace ar
 
 			GLint textureID = 0;
 
-			if (param.VertexShaderTextures[i]->GetType() == TextureType::Texture2D)
+			if (param.PixelShaderTextures[i]->GetType() == TextureType::Texture2D)
 			{
-				auto texture = (Texture2D_Impl_GL*)param.VertexShaderTextures[i];
+				auto texture = (Texture2D_Impl_GL*)param.PixelShaderTextures[i];
 				textureID = texture->GetTexture();
 			}
-			else if (param.VertexShaderTextures[i]->GetType() == TextureType::RenderTexture2D)
+			else if (param.PixelShaderTextures[i]->GetType() == TextureType::RenderTexture2D)
 			{
-				auto texture = (RenderTexture2D_Impl_GL*)param.VertexShaderTextures[i];
+				auto texture = (RenderTexture2D_Impl_GL*)param.PixelShaderTextures[i];
 				textureID = texture->GetTexture();
 			}
-			else if (param.VertexShaderTextures[i]->GetType() == TextureType::CubemapTexture)
+			else if (param.PixelShaderTextures[i]->GetType() == TextureType::CubemapTexture)
 			{
-				auto texture = (CubemapTexture_Impl_GL*)param.VertexShaderTextures[i];
+				auto texture = (CubemapTexture_Impl_GL*)param.PixelShaderTextures[i];
 				textureID = texture->GetTexture();
 			}
-			else if (param.VertexShaderTextures[i]->GetType() == TextureType::DepthTexture)
+			else if (param.PixelShaderTextures[i]->GetType() == TextureType::DepthTexture)
 			{
-				auto texture = (DepthTexture_Impl_GL*)param.VertexShaderTextures[i];
+				auto texture = (DepthTexture_Impl_GL*)param.PixelShaderTextures[i];
 				textureID = texture->GetTexture();
 			}
 
@@ -222,6 +235,7 @@ namespace ar
 			glSamplerParameteri(samplers[i], GL_TEXTURE_WRAP_S, glwrap[wrap_]);
 			glSamplerParameteri(samplers[i], GL_TEXTURE_WRAP_T, glwrap[wrap_]);
 		}
+		GLCheckError();
 
 		glActiveTexture(GL_TEXTURE0);
 
@@ -302,6 +316,7 @@ namespace ar
 				}
 			}
 		}
+		GLCheckError();
 
 		if (param.InstanceCount == 1)
 		{
@@ -311,7 +326,8 @@ namespace ar
 		{
 			glDrawElementsInstanced(GL_TRIANGLES, ib->GetIndexCount(), GL_UNSIGNED_SHORT, NULL, param.InstanceCount);
 		}
-		
+		GLCheckError();
+
 		for (auto& layout : shader->GetLayouts())
 		{
 			if (layout.attribute >= 0)
@@ -319,9 +335,12 @@ namespace ar
 				glDisableVertexAttribArray(layout.attribute);
 			}
 		}
+		GLCheckError();
 
 		glUseProgram(0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		GLCheckError();
 	}
 }

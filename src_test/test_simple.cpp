@@ -80,8 +80,8 @@ void test_simple(ar::GraphicsDeviceType device)
 	std::vector<uint8_t> shader_vs;
 	std::vector<uint8_t> shader_ps;
 
-	LoadShaderFile(shader_vs, "simple_VS.dat");
-	LoadShaderFile(shader_ps, "simple_PS.dat");
+	LoadShaderFile(shader_vs, "simple_VS.dat", device);
+	LoadShaderFile(shader_ps, "simple_PS.dat", device);
 
 	shader->Initialize(manager, shader_vs.data(), shader_vs.size(), shader_ps.data(), shader_ps.size(), vertexLayouts);
 
@@ -101,7 +101,9 @@ void test_simple(ar::GraphicsDeviceType device)
 		dparam.IndexBufferPtr = indexBuffer;
 		dparam.ShaderPtr = shader;
 
+		context->Begin();
 		context->Draw(dparam);
+		context->End();
 
 		manager->EndScene();
 

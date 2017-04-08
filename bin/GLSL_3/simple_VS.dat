@@ -10,7 +10,6 @@ out vec4 oColor;
 void main()
 {
 	gl_Position = vec4(Pos.x,Pos.y,Pos.z,1.0);
-
-	oUV = vec4(UV.x,UV.y);
+	oUV = vec2(UV.x,UV.y);
 	oColor = Color;
 }

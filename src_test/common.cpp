@@ -52,12 +52,15 @@
 bool LoadShaderFile(std::vector<uint8_t>& dst, const char* path, ar::GraphicsDeviceType device)
 {
 	std::string p;
+	bool isScriptMode = false;
+
 #if _PSVITA
 	p = std::string(ShaderRootPath) + std::string(path);
 #elif defined(_WIN32)
 	if (device == ar::GraphicsDeviceType::OpenGL)
 	{
 		p = std::string("GLSL_3/") + std::string(path);
+		isScriptMode = true;
 	}
 	else
 	{
@@ -77,6 +80,11 @@ bool LoadShaderFile(std::vector<uint8_t>& dst, const char* path, ar::GraphicsDev
 
 	fclose(fp);
 
+	if (isScriptMode)
+	{
+		dst.push_back(0);
+		dst.push_back(0);
+	}
 	return true;
 }
 

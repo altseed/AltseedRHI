@@ -53,6 +53,8 @@ namespace ar
 
 	void Manager_Impl_GL::BeginScene(const SceneParameter& param)
 	{
+		GLCheckError();
+
 		// reset
 		for (int32_t i = 0; i < MaxTextureCount; i++)
 		{
@@ -65,6 +67,7 @@ namespace ar
 		if (param.RenderTargets[0] == nullptr)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glDrawBuffer(GL_BACK);
 			SetViewport(0, 0, windowWidth, windowHeight);
 		}
 		else
@@ -90,10 +93,21 @@ namespace ar
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, cb[2], 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, cb[3], 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, db, 0);
+
+			static const GLenum bufs[] = {
+				GL_COLOR_ATTACHMENT0,
+				GL_COLOR_ATTACHMENT1,
+				GL_COLOR_ATTACHMENT2,
+				GL_COLOR_ATTACHMENT3,
+			};
+			glDrawBuffers(4, bufs);
+
 			GLCheckError();
 
 			SetViewport(0, 0, param.RenderTargets[0]->GetWidth(), param.RenderTargets[0]->GetHeight());
 		}
+
+		GLCheckError();
 	}
 
 	void Manager_Impl_GL::EndScene()

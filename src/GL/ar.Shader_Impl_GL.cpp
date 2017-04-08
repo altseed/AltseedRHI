@@ -5,6 +5,13 @@
 
 namespace ar
 {
+#if _WIN32
+#include <Windows.h>
+#define OUTPUT_DEBUG_STRING(s)	OutputDebugStringA(s)
+#else
+#define OUTPUT_DEBUG_STRING(s)	printf("%s\n",s);
+#endif
+
 	void Shader_Impl_GL::Reflect(
 		std::map<std::string, ConstantLayout>& dst_constant,
 		int32_t& constantSize,
@@ -123,7 +130,11 @@ namespace ar
 
 	Shader_Impl_GL::~Shader_Impl_GL()
 	{
-		glDeleteProgram(program);
+		if (program != 0)
+		{
+			glDeleteProgram(program);
+			program = 0;
+		}
 	}
 
 	bool Shader_Impl_GL::Initialize(Manager* manager, const void* vs, int32_t vs_size, const void* ps, int32_t ps_size, const std::vector <VertexLayout>& layout)
@@ -138,14 +149,14 @@ namespace ar
 		int32_t vs_src_count = 0;
 		int32_t ps_src_count = 0;
 
-		GLuint program, vs_shader, ps_shader;
+		GLuint vs_shader, ps_shader;
 		GLint res_vs, res_ps, res_link;
 
 		vs_src[0] = (char*)vs;
 		vs_src_len[0] = strlen(vs_src[0]);
 
-		ps_src[1] = (char*)ps;
-		ps_src_len[1] = strlen(ps_src[1]);
+		ps_src[0] = (char*)ps;
+		ps_src_len[0] = strlen(ps_src[0]);
 
 		vs_src_count = 1;
 		ps_src_count = 1;
@@ -176,6 +187,29 @@ namespace ar
 			res_ps == GL_FALSE ||
 			res_link == GL_FALSE)
 		{
+			char log_text[512];
+			int32_t log_size;
+			glGetShaderInfoLog(vs_shader, sizeof(log_text), &log_size, log_text);
+			if (log_size > 0)
+			{
+				OUTPUT_DEBUG_STRING("Vertex Shader:\n");
+				OUTPUT_DEBUG_STRING("\n");
+				OUTPUT_DEBUG_STRING(log_text);
+			}
+			glGetShaderInfoLog(ps_shader, sizeof(log_text), &log_size, log_text);
+			if (log_size > 0)
+			{
+				OUTPUT_DEBUG_STRING("Fragment Shader:\n");
+				OUTPUT_DEBUG_STRING("\n");
+				OUTPUT_DEBUG_STRING(log_text);
+			}
+			glGetProgramInfoLog(program, sizeof(log_text), &log_size, log_text);
+			if (log_size > 0)
+			{
+				OUTPUT_DEBUG_STRING("Shader Link:\n");
+				OUTPUT_DEBUG_STRING(log_text);
+			}
+
 			goto Exit;
 		}
 
@@ -257,9 +291,24 @@ namespace ar
 
 	Exit:;
 
-		glDeleteProgram(program);
-		glDeleteShader(vs_shader);
-		glDeleteShader(ps_shader);
+		if (program != 0)
+		{
+			glDeleteProgram(program);
+			program = 0;
+		}
+
+		if (vs_shader != 0)
+		{
+			glDeleteShader(vs_shader);
+			vs_shader = 0;
+		}
+
+		if (ps_shader != 0)
+		{
+			glDeleteShader(ps_shader);
+			ps_shader = 0;
+		}
+
 		layouts.clear();
 
 		return false;
