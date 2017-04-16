@@ -53,6 +53,8 @@ namespace ar
 		D3D11_TEXTURE2D_DESC desc;
 		texture_->GetDesc(&desc);
 
+		this->format = GetTextureFormat(desc.Format);
+
 		return true;
 
 	End:;

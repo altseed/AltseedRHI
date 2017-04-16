@@ -28,3 +28,10 @@ static std::vector<GLenum> GLCheckError_Impl(const char *file, const int line)
 	return codes;
 }
 #define GLCheckError() GLCheckError_Impl(__FILE__, __LINE__)
+
+#include "../ar.BaseInternal.h"
+
+namespace ar
+{
+
+}

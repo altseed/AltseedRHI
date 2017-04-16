@@ -60,6 +60,9 @@ namespace ar
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
+		// TODO : correct
+		this->format = TextureFormat::R8G8B8A8_UNORM;
+
 		return false;
 	}
 }
