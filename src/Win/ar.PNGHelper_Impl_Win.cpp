@@ -17,7 +17,7 @@ namespace ar
 
 	bool PNGHelper_Impl_Win::Save(const char16_t* path, int32_t width, int32_t height, const void* data)
 	{
-			// bmpを作成する。
+			// Create bitmap data
 			Gdiplus::Bitmap bmp(width, height);
 
 			auto p = (Color*)data;
@@ -31,7 +31,7 @@ namespace ar
 				}
 			}
 
-			// 保存
+			// Save bitmap
 			CLSID id;
 			UINT encoderNum = 0;
 			UINT encoderSize = 0;

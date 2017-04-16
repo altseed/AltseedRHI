@@ -5,8 +5,40 @@
 
 #include "../ar.ImageHelper.h"
 
+#include "../3rdParty/nv_dds/nv_dds.h"
+
+#include <sstream>
+#include <iostream>
+
 namespace ar
 {
+	struct LoadTextureInfo
+	{
+		ar::Manager* manager = nullptr;
+		ar::Texture2D* texture = nullptr;
+		bool isEditable = false;
+		bool isSRGB = false;
+	};
+
+	static void loadTexture(const uint8_t* data, int32_t width, int32_t height, void* userData)
+	{
+		auto p = (LoadTextureInfo*)userData;
+
+		if (p->isSRGB)
+		{
+			if (!p->texture->Initialize(p->manager, width, height, ar::TextureFormat::R8G8B8A8_UNORM_SRGB, (void*)data, p->isEditable))
+			{
+				p->texture = nullptr;
+			}
+		}
+		else
+		{
+			if (!p->texture->Initialize(p->manager, width, height, ar::TextureFormat::R8G8B8A8_UNORM, (void*)data, p->isEditable))
+			{
+				p->texture = nullptr;
+			}
+		}
+	}
 
 	Texture2D_Impl_GL::Texture2D_Impl_GL()
 	{
@@ -111,8 +143,117 @@ namespace ar
 
 		this->width = width;
 		this->height = height;
+		this->format = format;
 
 		GLCheckError();
+		return false;
+	}
+
+	bool Texture2D_Impl_GL::Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB)
+	{
+		if (src_size == 0) return nullptr;
+
+		if (ImageHelper::IsPNG(src, src_size))
+		{
+			LoadTextureInfo ltInfo;
+			ltInfo.manager = manager;
+			ltInfo.texture = this;
+			ltInfo.isEditable = isEditable;
+			ltInfo.isSRGB = isSRGB;
+
+			if (ar::ImageHelper::LoadPNG(loadTexture, &ltInfo, src, src_size) &&
+				ltInfo.texture != nullptr)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else if (ImageHelper::IsDDS(src, src_size))
+		{
+			std::vector<char> d;
+			d.resize(src_size);
+			memcpy(d.data(), src, src_size);
+			nv_dds::CDDSImage image;
+			std::istringstream stream(std::string(d.begin(), d.end()));
+			image.load(stream);
+
+			if (image.get_format() == GL_RGBA)
+			{
+				glGenTextures(1, &texture);
+				glBindTexture(GL_TEXTURE_2D, texture);
+
+				glTexImage2D(GL_TEXTURE_2D, 0, image.get_components(), image.get_width(),
+					image.get_height(), 0, image.get_format(), GL_UNSIGNED_BYTE, image);
+
+				for (int i = 0; i < image.get_num_mipmaps(); i++)
+				{
+					glTexImage2D(GL_TEXTURE_2D, i + 1, image.get_components(),
+						image.get_mipmap(i).get_width(), image.get_mipmap(i).get_height(),
+						0, image.get_format(), GL_UNSIGNED_BYTE, image.get_mipmap(i));
+				}
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				this->width = image.get_width();
+				this->height = image.get_height();
+				this->format = TextureFormat::R8G8B8A8_UNORM;
+
+				return true;
+			}
+
+			if (image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT ||
+				image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT3_EXT ||
+				image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+			{
+				glGenTextures(1, &texture);
+				glBindTexture(GL_TEXTURE_2D, texture);
+
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image.get_format(),
+					image.get_width(), image.get_height(), 0, image.get_size(),
+					image);
+
+				for (int i = 0; i < image.get_num_mipmaps(); i++)
+				{
+					auto mipmap = image.get_mipmap(i);
+
+					glCompressedTexImage2D(GL_TEXTURE_2D, i + 1, image.get_format(),
+						mipmap.get_width(), mipmap.get_height(), 0, mipmap.get_size(),
+						mipmap);
+				}
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				this->width = image.get_width();
+				this->height = image.get_height();
+				
+
+				if (image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+				{
+					this->format = TextureFormat::BC1;
+				}
+				else if (image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT3_EXT)
+				{
+					this->format = TextureFormat::BC2;
+				}
+				else if (image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+				{
+					this->format = TextureFormat::BC3;
+				}
+				else
+				{
+					glDeleteTextures(1, &texture);
+					texture = 0;
+					return false;
+				}
+
+				return true;
+			}
+
+		}
+
 		return false;
 	}
 }

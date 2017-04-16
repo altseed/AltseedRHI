@@ -1,7 +1,9 @@
 ﻿
 #pragma once
 
+#include <stdio.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include <array>
 #include <string>
@@ -507,6 +509,9 @@ namespace ar
 
 	class Texture
 	{
+	protected:
+		TextureFormat	format = TextureFormat::R8_UNORM;
+
 	public:
 		Texture() {}
 		virtual ~Texture() {}
@@ -525,6 +530,8 @@ namespace ar
 		virtual ~Texture2D() {}
 
 		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) { return false; }
+
+		virtual bool Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB) { return false; }
 
 		int32_t GetWidth() const { return width; }
 

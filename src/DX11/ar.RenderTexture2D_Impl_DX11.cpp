@@ -93,6 +93,7 @@ namespace ar
 
 		this->width = width;
 		this->height = height;
+		this->format = format;
 
 		return true;
 

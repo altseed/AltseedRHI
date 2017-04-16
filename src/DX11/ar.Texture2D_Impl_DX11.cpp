@@ -5,8 +5,38 @@
 
 #include "../ar.ImageHelper.h"
 
+#include "../3rdParty/DirectXToolKit/PlatformHelpers.h"
+#include "../3rdParty/DirectXToolKit/DDSTextureLoader.h"
+
 namespace ar
 {
+	struct LoadTextureInfo
+	{
+		ar::Manager* manager = nullptr;
+		ar::Texture2D* texture = nullptr;
+		bool isEditable = false;
+		bool isSRGB = false;
+	};
+
+	static void loadTexture(const uint8_t* data, int32_t width, int32_t height, void* userData)
+	{
+		auto p = (LoadTextureInfo*)userData;
+
+		if (p->isSRGB)
+		{
+			if (!p->texture->Initialize(p->manager, width, height, ar::TextureFormat::R8G8B8A8_UNORM_SRGB, (void*)data, p->isEditable))
+			{
+				p->texture = nullptr;
+			}
+		}
+		else
+		{
+			if (!p->texture->Initialize(p->manager, width, height, ar::TextureFormat::R8G8B8A8_UNORM, (void*)data, p->isEditable))
+			{
+				p->texture = nullptr;
+			}
+		}
+	}
 
 	Texture2D_Impl_DX11::Texture2D_Impl_DX11()
 	{
@@ -106,6 +136,78 @@ namespace ar
 
 		this->width = width;
 		this->height = height;
+		this->format = format;
+
+		return true;
+
+	End:;
+		SafeRelease(texture);
+		SafeRelease(textureSRV);
+		return false;
+	}
+
+	bool Texture2D_Impl_DX11::Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB)
+	{
+		auto m = (Manager_Impl_DX11*)manager;
+		HRESULT hr;
+
+		if (src_size == 0) return nullptr;
+
+		if (ImageHelper::IsPNG(src, src_size))
+		{
+			LoadTextureInfo ltInfo;
+			ltInfo.manager = manager;
+			ltInfo.texture = this;
+			ltInfo.isEditable = isEditable;
+			ltInfo.isSRGB = isSRGB;
+
+			if (ar::ImageHelper::LoadPNG(loadTexture, &ltInfo, src, src_size) &&
+				ltInfo.texture != nullptr)
+			{
+				return true;
+			}
+			else
+			{
+				goto End;
+			}
+		}
+		if (ImageHelper::IsDDS(src, src_size))
+		{
+			ID3D11Resource* _texture = nullptr;
+			ID3D11ShaderResourceView* _textureSRV = nullptr;
+
+			hr = DirectX::CreateDDSTextureFromMemory(
+				m->GetDevice(),
+				(const uint8_t*)src,
+				src_size,
+				&_texture,
+				&_textureSRV);
+
+			if (_texture == nullptr || _textureSRV == nullptr)
+			{
+				SafeRelease(_texture);
+				SafeRelease(_textureSRV);
+				goto End;
+			}
+
+			textureSRV = _textureSRV;
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+			textureSRV->GetDesc(&desc);
+
+			texture = (ID3D11Texture2D*)_texture;
+			D3D11_TEXTURE2D_DESC desc_;
+			texture->GetDesc(&desc_);
+
+			if (desc.ViewDimension != D3D_SRV_DIMENSION_TEXTURE2D)
+			{
+				goto End;
+			}
+
+			this->width = desc_.Width;
+			this->height = desc_.Height;
+			this->format = GetTextureFormat(desc.Format);
+		}
 
 		return true;
 
