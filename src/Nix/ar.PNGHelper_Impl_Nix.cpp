@@ -5,9 +5,23 @@
 #include <pngstruct.h>
 #include <pnginfo.h>
 
-
 namespace ar
 {
+	// http://hasenpfote36.blogspot.jp/2016/09/stdcodecvt.html
+	static constexpr std::codecvt_mode mode = std::codecvt_mode::little_endian;
+
+	static std::string utf16_to_utf8(const std::u16string& s)
+	{
+#if defined(_MSC_VER) && (_MSC_VER <= 1900)
+		std::wstring_convert<std::codecvt_utf8_utf16<std::uint16_t, 0x10ffff, mode>, std::uint16_t> conv;
+		auto p = reinterpret_cast<const std::uint16_t*>(s.c_str());
+		return conv.to_bytes(p, p + s.length());
+#else
+		std::wstring_convert<std::codecvt_utf8_utf16<char16_t, 0x10ffff, mode>, char16_t> conv;
+		return conv.to_bytes(s);
+#endif
+	}
+
 	static void PngReadData(png_structp png_ptr, png_bytep data, png_size_t length)
 	{
 		auto d = (uint8_t**)png_get_io_ptr(png_ptr);
@@ -24,6 +38,47 @@ namespace ar
 	PNGHelper_Impl_Nix::~PNGHelper_Impl_Nix()
 	{
 
+	}
+
+	bool PNGHelper_Impl_Nix::Save(const char16_t* path, int32_t width, int32_t height, const void* data)
+	{
+		/* 構造体確保 */
+#if _WIN32
+		FILE *fp = _wfopen((const wchar_t*)path, L"wb");
+#else
+		FILE *fp = fopen(utf16_to_utf8(path).c_str(), "wb");
+#endif
+
+		if (fp == nullptr) return;
+
+		png_structp pp = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		png_infop ip = png_create_info_struct(pp);
+
+		/* 書き込み準備 */
+		png_init_io(pp, fp);
+		png_set_IHDR(pp, ip, width, height,
+			8, /* 8bit以外にするなら変える */
+			PNG_COLOR_TYPE_RGBA, /* RGBA以外にするなら変える */
+			PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+		/* ピクセル領域確保 */
+		std::vector<png_byte>  raw1D(height * png_get_rowbytes(pp, ip));
+		std::vector<png_bytep> raw2D(height * sizeof(png_bytep));
+		for (int32_t i = 0; i < height; i++)
+		{
+			raw2D[i] = &raw1D[i*png_get_rowbytes(pp, ip)];
+		}
+
+		memcpy((void*)raw1D.data(), data, width * height * 4);
+
+		/* 書き込み */
+		png_write_info(pp, ip);
+		png_write_image(pp, raw2D.data());
+		png_write_end(pp, ip);
+
+		/* 解放 */
+		png_destroy_write_struct(&pp, &ip);
+		fclose(fp);
 	}
 
 	bool PNGHelper_Impl_Nix::Read(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size)

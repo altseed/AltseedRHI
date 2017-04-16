@@ -12,6 +12,7 @@ public:
 
 	static void Terminate();
 
+	static bool SavePNG(const char16_t* path, int32_t width, int32_t height, const void* data);
 	static bool LoadPNG(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size);
 
 	/**

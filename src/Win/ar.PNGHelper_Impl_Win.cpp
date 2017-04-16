@@ -15,6 +15,59 @@ namespace ar
 		Gdiplus::GdiplusShutdown(gdiplusToken);
 	}
 
+	bool PNGHelper_Impl_Win::Save(const char16_t* path, int32_t width, int32_t height, const void* data)
+	{
+			// bmpを作成する。
+			Gdiplus::Bitmap bmp(width, height);
+
+			auto p = (Color*)data;
+			for (int32_t y = 0; y < height; y++)
+			{
+				for (int32_t x = 0; x < width; x++)
+				{
+					auto src = p[x + width * y];
+					Gdiplus::Color dst(src.A, src.R, src.G, src.B);
+					bmp.SetPixel(x, y, dst);
+				}
+			}
+
+			// 保存
+			CLSID id;
+			UINT encoderNum = 0;
+			UINT encoderSize = 0;
+			Gdiplus::GetImageEncodersSize(&encoderNum, &encoderSize);
+			if (encoderSize == 0)
+			{
+				Gdiplus::GdiplusShutdown(gdiplusToken);
+				return;
+			}
+
+			auto imageCodecInfo = (Gdiplus::ImageCodecInfo*) malloc(encoderSize);
+			Gdiplus::GetImageEncoders(encoderNum, encoderSize, imageCodecInfo);
+
+			for (UINT i = 0; i < encoderNum; i++)
+			{
+				if (wcscmp(imageCodecInfo[i].MimeType, L"image/png") == 0)
+				{
+					id = imageCodecInfo[i].Clsid;
+					free(imageCodecInfo);
+					imageCodecInfo = nullptr;
+					break;
+				}
+			}
+
+			if (imageCodecInfo != nullptr)
+			{
+				free(imageCodecInfo);
+				return;
+			}
+
+			bmp.Save((const wchar_t*)path, &id);
+		
+
+		return true;
+	}
+
 	bool PNGHelper_Impl_Win::Read(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size)
 	{
 		auto global = GlobalAlloc(GMEM_MOVEABLE, src_size);

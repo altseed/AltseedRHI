@@ -8,7 +8,7 @@
 #elif defined(_WIN32)
 #include "Win/ar.PNGHelper_Impl_Win.h"
 #else
-#include "Win/ar.PNGHelper_Impl_Nix.h"
+#include "Nix/ar.PNGHelper_Impl_Nix.h"
 #endif
 
 namespace ar
@@ -43,6 +43,17 @@ void ImageHelper::Terminate()
 	{
 		SafeDelete(pngHelper);
 	}
+}
+
+
+bool ImageHelper::SavePNG(const char16_t* path, int32_t width, int32_t height, const void* data)
+{
+	if (pngHelper != nullptr)
+	{
+		return pngHelper->Save(path, width, height, data);
+	}
+
+	return false;
 }
 
 bool ImageHelper::LoadPNG(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size)
