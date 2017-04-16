@@ -33,6 +33,8 @@ namespace ar
 
 		void Present() override;
 
+		bool SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height);
+
 		ID3D11Device* GetDevice() const { return device; }
 
 		ID3D11DeviceContext* GetContext() { return context; }

@@ -240,4 +240,58 @@ namespace ar
 		// 同期しない
 		swapChain->Present(0, 0);
 	}
+
+	bool Manager_Impl_DX11::SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height)
+	{
+		ID3D11Texture2D* texture_ = nullptr;
+
+		HRESULT hr;
+
+		D3D11_TEXTURE2D_DESC desc;
+		desc.ArraySize = 1;
+		desc.BindFlags = 0;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Width = width;
+		desc.Height = height;
+		desc.MipLevels = 1;
+		desc.MiscFlags = 0;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Usage = D3D11_USAGE_STAGING;
+
+		hr = GetDevice()->CreateTexture2D(&desc, 0, &texture_);
+		if (FAILED(hr))
+		{
+			goto END;
+		}
+
+		GetContext()->CopyResource(texture_, texture);
+
+		D3D11_MAPPED_SUBRESOURCE mr;
+		UINT sr = D3D11CalcSubresource(0, 0, 0);
+		hr = GetContext()->Map(texture_, sr, D3D11_MAP_READ_WRITE, 0, &mr);
+		if (FAILED(hr))
+		{
+			return false;
+		}
+
+		dst.resize(width * height);
+
+		for (int32_t h = 0; h < height; h++)
+		{
+			auto dst_ = &(dst[h * width]);
+			auto src_ = &(((uint8_t*)mr.pData)[h*mr.RowPitch]);
+			memcpy(dst_, src_, width * sizeof(Color));
+		}
+
+		GetContext()->Unmap(texture_, sr);
+
+		SafeRelease(texture_);
+		return true;
+
+	END:;
+		SafeRelease(texture_);
+		return false;
+	}
 }

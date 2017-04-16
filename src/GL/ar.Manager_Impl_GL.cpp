@@ -118,4 +118,22 @@ namespace ar
 	void Manager_Impl_GL::Present()
 	{
     }
+
+	bool Manager_Impl_GL::SaveTexture(std::vector<Color>& bufs, GLuint texture, int32_t width, int32_t height)
+	{
+		GLCheckError();
+
+		bufs.resize(width * height);
+
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufs.data());
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		GLCheckError();
+
+		return true;
+	}
 }
