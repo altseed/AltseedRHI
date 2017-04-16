@@ -137,6 +137,7 @@ namespace ar
 		this->width = width;
 		this->height = height;
 		this->format = format;
+		this->manager = manager;
 
 		return true;
 
@@ -207,6 +208,7 @@ namespace ar
 			this->width = desc_.Width;
 			this->height = desc_.Height;
 			this->format = GetTextureFormat(desc.Format);
+			this->manager = manager;
 		}
 
 		return true;
@@ -215,5 +217,31 @@ namespace ar
 		SafeRelease(texture);
 		SafeRelease(textureSRV);
 		return false;
+	}
+
+	bool Texture2D_Impl_DX11::Lock(TextureLockInfomation* info)
+	{
+		if (info == nullptr) return false;
+		if (resource.size() == 0) return false;
+
+		info->Pixels = resource.data();
+		info->Pitch = ImageHelper::GetPitch(format);
+		info->Width = width;
+		info->Height = height;
+		return true;
+	}
+
+	void Texture2D_Impl_DX11::Unlock()
+	{
+		auto m = (Manager_Impl_DX11*)manager;
+		HRESULT hr;
+
+		m->GetContext()->UpdateSubresource(
+			texture,
+			0,
+			NULL,
+			resource.data(),
+			width * ImageHelper::GetPitch(format),
+			0);
 	}
 }

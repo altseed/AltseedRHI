@@ -12,6 +12,7 @@ class Texture2D_Impl_DX11
 	: public Texture2D
 {
 private:
+	Manager*					manager = nullptr;
 	ID3D11Texture2D*			texture = nullptr;
 	ID3D11ShaderResourceView*	textureSRV = nullptr;
 
@@ -25,6 +26,10 @@ public:
 	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable);
 
 	bool Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB) override;
+
+	bool Lock(TextureLockInfomation* info) override;
+
+	void Unlock() override;
 
 	ID3D11ShaderResourceView* GetShaderResourceView() const { return textureSRV; }
 };

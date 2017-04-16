@@ -1,4 +1,6 @@
 ﻿
+#pragma once
+
 #include "ar.Base.h"
 
 namespace ar

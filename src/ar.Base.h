@@ -253,6 +253,14 @@ namespace ar
 		uint8_t	A;
 	};
 
+	struct TextureLockInfomation
+	{
+		void*		Pixels = nullptr;
+		int32_t		Pitch = 0;
+		int32_t		Width = 0;
+		int32_t		Height = 0;
+	};
+
 	struct ManagerInitializationParameter
 	{
 		std::array<void*, 2>	Handles;
@@ -532,6 +540,10 @@ namespace ar
 		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) { return false; }
 
 		virtual bool Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB) { return false; }
+
+		virtual bool Lock(TextureLockInfomation* info) { return false; }
+
+		virtual void Unlock() {}
 
 		int32_t GetWidth() const { return width; }
 

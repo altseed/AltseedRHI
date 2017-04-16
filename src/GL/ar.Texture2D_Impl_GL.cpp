@@ -108,6 +108,9 @@ namespace ar
 			return false;
 		}
 
+		std::vector<uint8_t> resource_rev;
+		FlipYInternal(resource_rev, (const uint8_t*)data, width, height, format);
+
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -117,7 +120,7 @@ namespace ar
 			0,
 			format_,
 			type,
-			data);
+			resource_rev.data());
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -144,6 +147,7 @@ namespace ar
 		this->width = width;
 		this->height = height;
 		this->format = format;
+		this->manager = manager;
 
 		GLCheckError();
 		return false;
@@ -200,6 +204,7 @@ namespace ar
 				this->width = image.get_width();
 				this->height = image.get_height();
 				this->format = TextureFormat::R8G8B8A8_UNORM;
+				this->manager = manager;
 
 				return true;
 			}
@@ -228,7 +233,7 @@ namespace ar
 
 				this->width = image.get_width();
 				this->height = image.get_height();
-				
+				this->manager = manager;
 
 				if (image.get_format() == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
 				{
@@ -255,5 +260,79 @@ namespace ar
 		}
 
 		return false;
+	}
+
+	bool Texture2D_Impl_GL::Lock(TextureLockInfomation* info)
+	{
+		if (info == nullptr) return false;
+		if (resource.size() == 0) return false;
+
+		info->Pixels = &(resource[0]);
+		info->Pitch = ImageHelper::GetPitch(format);
+		info->Width = width;
+		info->Height = height;
+		return true;
+	}
+
+	void Texture2D_Impl_GL::Unlock()
+	{
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		int32_t intrenalFormat_;
+		int32_t format_ = GL_RGBA;
+		int32_t type;
+		if (format == TextureFormat::R8G8B8A8_UNORM)
+		{
+			intrenalFormat_ = GL_RGBA;
+			type = GL_UNSIGNED_BYTE;
+		}
+		else if (format == TextureFormat::R16G16B16A16_FLOAT)
+		{
+			intrenalFormat_ = GL_RGBA16F;
+			format_ = GL_RGBA;
+			type = GL_HALF_FLOAT;
+		}
+		else if (format == TextureFormat::R32G32B32A32_FLOAT)
+		{
+			intrenalFormat_ = GL_RGBA32F;
+			type = GL_FLOAT;
+		}
+		else if (format == TextureFormat::R8G8B8A8_UNORM_SRGB)
+		{
+			intrenalFormat_ = GL_SRGB8_ALPHA8;
+			type = GL_UNSIGNED_BYTE;
+		}
+		else if (format == TextureFormat::R16G16_FLOAT)
+		{
+			intrenalFormat_ = GL_RG16F;
+			format_ = GL_RG;
+			type = GL_HALF_FLOAT;
+		}
+		else if (format == TextureFormat::R8_UNORM)
+		{
+#ifdef __APPLE__
+			intrenalFormat_ = GL_RED;
+			format_ = GL_RED;
+#else
+			intrenalFormat_ = GL_LUMINANCE;
+			format_ = GL_LUMINANCE;
+#endif
+			type = GL_UNSIGNED_BYTE;
+		}
+		std::vector<uint8_t> resource_rev;
+		FlipYInternal(resource_rev, (const uint8_t*)resource.data(), width, height, format);
+
+		glTexSubImage2D(
+			GL_TEXTURE_2D,
+			0,
+			0,
+			0,
+			width,
+			height,
+			format_,
+			type,
+			resource_rev.data());
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

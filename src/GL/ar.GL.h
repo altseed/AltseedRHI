@@ -10,7 +10,8 @@
 #include <GL/gl3.h>
 #endif
 
-#include <vector>
+#include "../ar.BaseInternal.h"
+#include "../ar.ImageHelper.h"
 
 static std::vector<GLenum> GLCheckError_Impl(const char *file, const int line)
 {
@@ -29,9 +30,25 @@ static std::vector<GLenum> GLCheckError_Impl(const char *file, const int line)
 }
 #define GLCheckError() GLCheckError_Impl(__FILE__, __LINE__)
 
-#include "../ar.BaseInternal.h"
+
 
 namespace ar
 {
+	static void FlipYInternal(std::vector<uint8_t> &dst, const uint8_t* src, int32_t width, int32_t height, TextureFormat format)
+	{
+		auto pitch = ImageHelper::GetPitch(format);
+		auto size = width * height * pitch;
+		dst.resize(size);
 
+		for (auto y = 0; y < height; y++)
+		{
+			for (auto x = 0; x < width; x++)
+			{
+				for (auto p = 0; p < pitch; p++)
+				{
+					dst[p + (x + y * width) * pitch] = src[p + (x + (height - y - 1) * width) * pitch];
+				}
+			}
+		}
+	}
 }
