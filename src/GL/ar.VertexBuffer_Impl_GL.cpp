@@ -15,7 +15,7 @@ namespace ar
 		glDeleteBuffers(1, &buffer);
 	}
 
-	bool VertexBuffer_Impl_GL::Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount)
+	bool VertexBuffer_Impl_GL::Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount, bool isDynamic)
 	{
 		auto m = (Manager_Impl_GL*)manager;
 
@@ -27,6 +27,12 @@ namespace ar
 		this->manager = manager;
 		this->vertexSize = vertexSize;
 		this->vertexCount = vertexCount;
+		this->isDynamic = isDynamic;
+
+		if (this->isDynamic)
+		{
+			this->dynamicBuffer.resize(vertexSize * vertexCount);
+		}
 
 		return true;
 
@@ -42,6 +48,43 @@ namespace ar
 		glBufferData(GL_ARRAY_BUFFER, vertexSize * vertexCount, data, GL_STREAM_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+		ringOffset = 0;
+
 		return true;
+	}
+
+	void* VertexBuffer_Impl_GL::LockRingBuffer(int32_t count)
+	{
+		if (count > vertexCount) return nullptr;
+		if (!isDynamic) return nullptr;
+
+		if (ringOffset + count >= vertexCount)
+		{
+			ringOffset = 0;
+		}
+
+		auto p = &(dynamicBuffer[ringOffset * vertexSize]);
+
+		ringLocked = count;
+
+		return p;
+	}
+
+	void VertexBuffer_Impl_GL::Unlock()
+	{
+		auto m = (Manager_Impl_GL*)manager;
+
+		GLCheckError();
+
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		GLCheckError();
+
+		glBufferSubData(GL_ARRAY_BUFFER, ringOffset * vertexSize, ringLocked * vertexSize, dynamicBuffer.data());
+		GLCheckError();
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GLCheckError();
+
+		ringOffset += ringLocked;
 	}
 }

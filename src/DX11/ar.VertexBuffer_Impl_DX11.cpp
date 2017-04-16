@@ -15,7 +15,7 @@ namespace ar
 		SafeRelease(buffer);
 	}
 
-	bool VertexBuffer_Impl_DX11::Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount)
+	bool VertexBuffer_Impl_DX11::Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount, bool isDynamic)
 	{
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
@@ -25,9 +25,9 @@ namespace ar
 		ZeroMemory(&hBufferDesc, sizeof(hBufferDesc));
 
 		hBufferDesc.ByteWidth = vertexSize * vertexCount;
-		hBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		hBufferDesc.Usage = isDynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 		hBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		hBufferDesc.CPUAccessFlags = 0;
+		hBufferDesc.CPUAccessFlags = isDynamic ? D3D11_CPU_ACCESS_WRITE : 0;
 		hBufferDesc.MiscFlags = 0;
 		hBufferDesc.StructureByteStride = sizeof(float);
 
@@ -46,7 +46,13 @@ namespace ar
 		this->manager = manager;
 		this->vertexSize = vertexSize;
 		this->vertexCount = vertexCount;
+		this->isDynamic = isDynamic;
 
+		if (this->isDynamic)
+		{
+			this->dynamicBuffer.resize(vertexSize * vertexCount);
+		}
+		
 		return true;
 
 	End:;
@@ -61,14 +67,75 @@ namespace ar
 
 		auto m = (Manager_Impl_DX11*)manager;
 
-		m->GetContext()->UpdateSubresource(
-			buffer,
-			0,
-			nullptr,
-			data,
-			0,
-			0);
+		if (isDynamic)
+		{
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			m->GetContext()->Map(
+				buffer,
+				0,
+				D3D11_MAP_WRITE_DISCARD,
+				0,
+				&mappedResource);
+
+			memcpy(mappedResource.pData, data, 0);
+
+			m->GetContext()->Unmap(buffer, 0);
+		}
+		else
+		{
+			m->GetContext()->UpdateSubresource(
+				buffer,
+				0,
+				nullptr,
+				data,
+				0,
+				0);
+		}
+
+		ringOffset = 0;
 
 		return true;
+	}
+
+	void* VertexBuffer_Impl_DX11::LockRingBuffer(int32_t count)
+	{
+		if (count > vertexCount) return nullptr;
+		if (!isDynamic) return nullptr;
+
+		if (ringOffset + count >= vertexCount)
+		{
+			ringOffset = 0;
+		}
+		
+		auto p = &(dynamicBuffer[ringOffset * vertexSize]);
+
+		ringLocked = count;
+
+		return p;
+	}
+
+	void VertexBuffer_Impl_DX11::Unlock()
+	{
+		auto m = (Manager_Impl_DX11*)manager;
+
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		m->GetContext()->Map(
+			buffer,
+			0,
+			ringOffset != 0 ? D3D11_MAP_WRITE_NO_OVERWRITE : D3D11_MAP_WRITE_DISCARD,
+			0,
+			&mappedResource);
+
+		uint8_t* dst = (uint8_t*)mappedResource.pData;
+		dst += (ringOffset * vertexSize);
+
+		uint8_t* src = (uint8_t*)dynamicBuffer.data();
+		src += (ringOffset * vertexSize);
+
+		memcpy(dst, src, ringLocked * vertexSize);
+
+		m->GetContext()->Unmap(buffer, 0);
+
+		ringOffset += ringLocked;
 	}
 }

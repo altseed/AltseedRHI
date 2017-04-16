@@ -38,8 +38,7 @@ namespace ar
 			Gdiplus::GetImageEncodersSize(&encoderNum, &encoderSize);
 			if (encoderSize == 0)
 			{
-				Gdiplus::GdiplusShutdown(gdiplusToken);
-				return;
+				return false;
 			}
 
 			auto imageCodecInfo = (Gdiplus::ImageCodecInfo*) malloc(encoderSize);
@@ -59,7 +58,7 @@ namespace ar
 			if (imageCodecInfo != nullptr)
 			{
 				free(imageCodecInfo);
-				return;
+				return false;
 			}
 
 			bmp.Save((const wchar_t*)path, &id);

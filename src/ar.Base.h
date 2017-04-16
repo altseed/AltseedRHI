@@ -357,14 +357,19 @@ namespace ar
 	protected:
 		int32_t			vertexSize = 0;
 		int32_t			vertexCount = 0;
-
+		bool			isDynamic = false;
+		
 	public:
 		VertexBuffer() {}
 		virtual ~VertexBuffer() {}
 
-		virtual bool Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount) { return false; }
+		virtual bool Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount, bool isDynamic) { return false; }
 
 		virtual bool Write(const void* data, int32_t size) { return false; }
+
+		virtual void* LockRingBuffer(int32_t count) { return nullptr; }
+
+		virtual void Unlock() {}
 
 		int32_t GetVertexCount() const { return vertexCount; }
 
