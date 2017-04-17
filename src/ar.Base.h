@@ -402,6 +402,10 @@ namespace ar
 		Compiler() = default;
 
 		virtual ~Compiler() = default;
+
+		virtual bool Compile(ShaderCompilerResult& result, ShaderCompilerParameter& param) { return false; }
+
+		static Compiler* Create(Manager* manager);
 	};
 
 	class VertexBuffer

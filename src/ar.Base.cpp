@@ -146,6 +146,25 @@ namespace ar
 #endif
 	}
 
+	Compiler* Compiler::Create(Manager* manager)
+	{
+#if defined(_PSVITA)
+		return new Compiler();
+#elif defined(_PS4)
+		return new Compiler();
+#elif defined(_SWITCH)
+		return new Compiler();
+#elif defined(_XBOXONE)
+		return new Compiler();
+#elif defined(_WIN32)
+		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		{
+			return new Compiler();
+		}
+		return new Compiler();
+#endif
+	}
+
 	VertexBuffer* VertexBuffer::Create(Manager* manager)
 	{
 #if defined(_PSVITA)

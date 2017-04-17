@@ -149,6 +149,7 @@
     <ClInclude Include="..\src\ar.Base.h" />
     <ClInclude Include="..\src\ar.BaseInternal.h" />
     <ClInclude Include="..\src\ar.ImageHelper.h" />
+    <ClInclude Include="..\src\DX11\ar.Compiler_Impl_DX11.h" />
     <ClInclude Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.h" />
     <ClInclude Include="..\src\DX11\ar.Context_Impl_DX11.h" />
     <ClInclude Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\src\DX11\ar.Shader_Impl_DX11.h" />
     <ClInclude Include="..\src\DX11\ar.Texture2D_Impl_DX11.h" />
     <ClInclude Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.h" />
+    <ClInclude Include="..\src\GL\ar.Compiler_Impl_GL.h" />
     <ClInclude Include="..\src\GL\ar.ConstantBuffer_Impl_GL.h" />
     <ClInclude Include="..\src\GL\ar.Context_Impl_GL.h" />
     <ClInclude Include="..\src\GL\ar.CubemapTexture_Impl_GL.h" />
@@ -178,6 +180,7 @@
     <ClCompile Include="..\src\3rdParty\nv_dds\nv_dds.cpp" />
     <ClCompile Include="..\src\ar.Base.cpp" />
     <ClCompile Include="..\src\ar.ImageHelper.cpp" />
+    <ClCompile Include="..\src\DX11\ar.Compiler_Impl_DX11.cpp" />
     <ClCompile Include="..\src\DX11\ar.ConstantBuffer_Impl_DX11.cpp" />
     <ClCompile Include="..\src\DX11\ar.Context_Impl_DX11.cpp" />
     <ClCompile Include="..\src\DX11\ar.CubemapTexture_Impl_DX11.cpp" />
@@ -188,6 +191,7 @@
     <ClCompile Include="..\src\DX11\ar.Shader_Impl_DX11.cpp" />
     <ClCompile Include="..\src\DX11\ar.Texture2D_Impl_DX11.cpp" />
     <ClCompile Include="..\src\DX11\ar.VertexBuffer_Impl_DX11.cpp" />
+    <ClCompile Include="..\src\GL\ar.Compiler_Impl_GL.cpp" />
     <ClCompile Include="..\src\GL\ar.ConstantBuffer_Impl_GL.cpp" />
     <ClCompile Include="..\src\GL\ar.Context_Impl_GL.cpp" />
     <ClCompile Include="..\src\GL\ar.CubemapTexture_Impl_GL.cpp" />

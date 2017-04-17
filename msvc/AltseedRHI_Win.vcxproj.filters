@@ -88,6 +88,12 @@
     <ClInclude Include="..\src\Win\ar.PNGHelper_Impl_Win.h">
       <Filter>Win</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\DX11\ar.Compiler_Impl_DX11.h">
+      <Filter>DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GL\ar.Compiler_Impl_GL.h">
+      <Filter>GL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ar.Base.cpp" />
@@ -160,6 +166,12 @@
     <ClCompile Include="..\src\ar.ImageHelper.cpp" />
     <ClCompile Include="..\src\Win\ar.PNGHelper_Impl_Win.cpp">
       <Filter>Win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DX11\ar.Compiler_Impl_DX11.cpp">
+      <Filter>DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GL\ar.Compiler_Impl_GL.cpp">
+      <Filter>GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
