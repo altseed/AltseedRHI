@@ -3,7 +3,7 @@
 
 namespace ar
 {
-	static GLuint Compile(std::vector<char*>& vs_src, std::vector<char*>& ps_src, std::string& log)
+	static GLuint CompileShader(std::vector<char*>& vs_src, std::vector<char*>& ps_src, std::string& log)
 	{
 		std::vector<int32_t> vs_src_len;
 		std::vector<int32_t> ps_src_len;
@@ -135,7 +135,27 @@ namespace ar
 
 	bool Compiler_Impl_GL::Compile(ShaderCompilerResult& result, ShaderCompilerParameter& param)
 	{
-		return false;
+		std::vector<char*> vs_src;
+		std::vector<char*> ps_src;
+
+		for (auto& t : param.VertexShaderTexts)
+		{
+			vs_src.push_back((char*)t.c_str());
+		}
+
+		for (auto& t : param.PixelShaderTexts)
+		{
+			ps_src.push_back((char*)t.c_str());
+		}
+
+		std::string log;
+
+		auto program = CompileShader(vs_src, ps_src, log);
+
+		result.ID = program;
+		result.ErrorMessage = log;
+
+		return program > 0;
 	}
 }
 
