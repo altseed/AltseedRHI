@@ -234,6 +234,7 @@ namespace ar
 
 	class Manager;
 	class Context;
+	class Compiler;
 
 	class VertexBuffer;
 	class IndexBuffer;
@@ -270,6 +271,39 @@ namespace ar
 		bool				IsFullscreenMode = false;
 		ColorSpaceType		ColorSpace = ColorSpaceType::GammaSpace;
 
+	};
+
+	struct ShaderMacro
+	{
+		std::string Name;
+		std::string Definition;
+
+		ShaderMacro()
+			: Name(nullptr)
+			, Definition(nullptr)
+		{
+		}
+
+		ShaderMacro(const char* name, const char* definition)
+			: Name(name)
+			, Definition(definition)
+		{
+		}
+	};
+
+	struct ShaderCompilerParameter
+	{
+		std::vector<ShaderMacro>	Macros;
+		std::vector<std::string>	VertexShaderTexts;
+		std::vector<std::string>	PixelShaderTexts;
+	};
+
+	struct ShaderCompilerResult
+	{
+		std::string				ErrorMessage;
+		int32_t					ID = 0;
+		std::vector<uint8_t>	VertexShaderBuffer;
+		std::vector<uint8_t>	PixelShaderBuffer;
 	};
 
 	struct SceneParameter
@@ -360,6 +394,14 @@ namespace ar
 		virtual void Draw(const DrawParameter& param) {}
 
 		static Context* Create(Manager* manager);
+	};
+	
+	class Compiler
+	{
+	public:
+		Compiler() = default;
+
+		virtual ~Compiler() = default;
 	};
 
 	class VertexBuffer
