@@ -1,6 +1,8 @@
 ﻿#pragma once
 
+#include <stdio.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include <array>
 #include <string>
@@ -231,6 +233,7 @@ namespace ar
 
 	class Manager;
 	class Context;
+	class Compiler;
 
 	class VertexBuffer;
 	class IndexBuffer;
@@ -242,6 +245,21 @@ namespace ar
 	class RenderTexture2D;
 	class DepthTexture;
 
+	struct Color
+	{
+		uint8_t	R;
+		uint8_t	G;
+		uint8_t	B;
+		uint8_t	A;
+	};
+
+	struct TextureLockInfomation
+	{
+		void*		Pixels = nullptr;
+		int32_t		Pitch = 0;
+		int32_t		Width = 0;
+		int32_t		Height = 0;
+	};
 
 	struct ManagerInitializationParameter
 	{
@@ -252,6 +270,39 @@ namespace ar
 		bool				IsFullscreenMode = false;
 		ColorSpaceType		ColorSpace = ColorSpaceType::GammaSpace;
 
+	};
+
+	struct ShaderMacro
+	{
+		std::string Name;
+		std::string Definition;
+
+		ShaderMacro()
+			: Name(nullptr)
+			, Definition(nullptr)
+		{
+		}
+
+		ShaderMacro(const char* name, const char* definition)
+			: Name(name)
+			, Definition(definition)
+		{
+		}
+	};
+
+	struct ShaderCompilerParameter
+	{
+		std::vector<ShaderMacro>	Macros;
+		std::vector<std::string>	VertexShaderTexts;
+		std::vector<std::string>	PixelShaderTexts;
+	};
+
+	struct ShaderCompilerResult
+	{
+		std::string				ErrorMessage;
+		int32_t					ID = 0;
+		std::vector<uint8_t>	VertexShaderBuffer;
+		std::vector<uint8_t>	PixelShaderBuffer;
 	};
 
 	struct SceneParameter
@@ -322,6 +373,10 @@ namespace ar
 
 		virtual void Present() {}
 
+		virtual bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
+
+		virtual std::array<void*, 2> GetInternalObjects() const { return std::array<void*, 2>(); }
+
 		GraphicsDeviceType GetDeviceType() const { return deviceType; }
 
 		static Manager* Create(GraphicsDeviceType device);
@@ -343,20 +398,37 @@ namespace ar
 
 		static Context* Create(Manager* manager);
 	};
+	
+	class Compiler
+	{
+	public:
+		Compiler() = default;
+
+		virtual ~Compiler() = default;
+
+		virtual bool Compile(ShaderCompilerResult& result, ShaderCompilerParameter& param) { return false; }
+
+		static Compiler* Create(Manager* manager);
+	};
 
 	class VertexBuffer
 	{
 	protected:
 		int32_t			vertexSize = 0;
 		int32_t			vertexCount = 0;
-
+		bool			isDynamic = false;
+		
 	public:
 		VertexBuffer() {}
 		virtual ~VertexBuffer() {}
 
-		virtual bool Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount) { return false; }
+		virtual bool Initialize(Manager* manager, int32_t vertexSize, int32_t vertexCount, bool isDynamic) { return false; }
 
 		virtual bool Write(const void* data, int32_t size) { return false; }
+
+		virtual void* LockRingBuffer(int32_t count) { return nullptr; }
+
+		virtual void Unlock() {}
 
 		int32_t GetVertexCount() const { return vertexCount; }
 
@@ -494,6 +566,9 @@ namespace ar
 
 	class Texture
 	{
+	protected:
+		TextureFormat	format = TextureFormat::R8_UNORM;
+
 	public:
 		Texture() {}
 		virtual ~Texture() {}
@@ -512,6 +587,12 @@ namespace ar
 		virtual ~Texture2D() {}
 
 		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) { return false; }
+
+		virtual bool Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB) { return false; }
+
+		virtual bool Lock(TextureLockInfomation* info) { return false; }
+
+		virtual void Unlock() {}
 
 		int32_t GetWidth() const { return width; }
 
@@ -561,6 +642,7 @@ namespace ar
 
 
 
+
 namespace ar
 {
 class ImageHelper
@@ -572,6 +654,7 @@ public:
 
 	static void Terminate();
 
+	static bool SavePNG(const char16_t* path, int32_t width, int32_t height, const void* data);
 	static bool LoadPNG(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size);
 
 	/**

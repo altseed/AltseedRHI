@@ -27,6 +27,8 @@ namespace ar
 
 		void Present() override;
 
+		bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
+
 		bool SaveTexture(std::vector<Color>& bufs, GLuint texture, int32_t width, int32_t height);
 	};
 }

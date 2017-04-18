@@ -51,4 +51,18 @@ namespace ar
 			}
 		}
 	}
+
+	static void FlipYInternal(std::vector<Color> &dst, std::vector<Color> src, int32_t width, int32_t height)
+	{
+		auto size = width * height;
+		dst.resize(size);
+
+		for (auto y = 0; y < height; y++)
+		{
+			for (auto x = 0; x < width; x++)
+			{
+				dst[x + y * width] = src[x + (height - y - 1) * width];
+			}
+		}
+	}
 }

@@ -374,6 +374,8 @@ namespace ar
 
 		virtual void Present() {}
 
+		virtual bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
+
 		virtual std::array<void*, 2> GetInternalObjects() const { return std::array<void*, 2>(); }
 
 		GraphicsDeviceType GetDeviceType() const { return deviceType; }

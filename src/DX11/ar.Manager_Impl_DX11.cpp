@@ -237,8 +237,23 @@ namespace ar
 
 	void Manager_Impl_DX11::Present()
 	{
-		// 同期しない
+		// Not sync
 		swapChain->Present(0, 0);
+	}
+
+	bool Manager_Impl_DX11::SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height)
+	{
+		ID3D11Resource* resource = nullptr;
+
+		defaultBackRenderTargetView->GetResource(&resource);
+		auto ret = SaveTexture(dst, resource, windowWidth, windowHeight);
+
+		SafeRelease(resource);
+
+		width = windowWidth;
+		height = windowHeight;
+
+		return ret;
 	}
 
 	std::array<void*, 2> Manager_Impl_DX11::GetInternalObjects() const

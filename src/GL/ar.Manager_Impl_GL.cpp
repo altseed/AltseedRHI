@@ -119,18 +119,56 @@ namespace ar
 	{
     }
 
-	bool Manager_Impl_GL::SaveTexture(std::vector<Color>& bufs, GLuint texture, int32_t width, int32_t height)
+	bool Manager_Impl_GL::SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height)
 	{
 		GLCheckError();
 
-		bufs.resize(width * height);
+		glFlush();
+		glFinish();
+
+		glViewport(0, 0, windowWidth, windowHeight);
+		glReadBuffer(GL_BACK);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		width = windowWidth;
+		height = windowHeight;
+
+		std::vector<Color> temp;
+		temp.resize(width * height);
+		dst.resize(width * height);
+
+		glReadPixels(
+			0,
+			0,
+			width,
+			height,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			(void*)temp.data());
+
+		FlipYInternal(dst, temp, width, height);
+
+		GLCheckError();
+
+		return true;
+	}
+
+	bool Manager_Impl_GL::SaveTexture(std::vector<Color>& dst, GLuint texture, int32_t width, int32_t height)
+	{
+		GLCheckError();
+
+		std::vector<Color> temp;
+		temp.resize(width * height);
+		dst.resize(width * height);
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufs.data());
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, temp.data());
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		FlipYInternal(dst, temp, width, height);
 
 		GLCheckError();
 
