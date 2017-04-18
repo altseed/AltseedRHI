@@ -374,6 +374,8 @@ namespace ar
 
 		virtual void Present() {}
 
+		virtual std::array<void*, 2> GetInternalObjects() const { return std::array<void*, 2>(); }
+
 		GraphicsDeviceType GetDeviceType() const { return deviceType; }
 
 		static Manager* Create(GraphicsDeviceType device);

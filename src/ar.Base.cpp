@@ -65,6 +65,7 @@
 
 #include "DX11/ar.Manager_Impl_DX11.h"
 #include "DX11/ar.Context_Impl_DX11.h"
+#include "DX11/ar.Compiler_Impl_DX11.h"
 
 #include "DX11/ar.VertexBuffer_Impl_DX11.h"
 #include "DX11/ar.IndexBuffer_Impl_DX11.h"
@@ -78,6 +79,7 @@
 
 #include "GL/ar.Manager_Impl_GL.h"
 #include "GL/ar.Context_Impl_GL.h"
+#include "GL/ar.Compiler_Impl_GL.h"
 
 #include "GL/ar.VertexBuffer_Impl_GL.h"
 #include "GL/ar.IndexBuffer_Impl_GL.h"
@@ -93,6 +95,7 @@
 
 #include "GL/ar.Manager_Impl_GL.h"
 #include "GL/ar.Context_Impl_GL.h"
+#include "GL/ar.Compiler_Impl_GL.h"
 
 #include "GL/ar.VertexBuffer_Impl_GL.h"
 #include "GL/ar.IndexBuffer_Impl_GL.h"
@@ -119,12 +122,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Manager_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (device == GraphicsDeviceType::OpenGL)
+		if (device == GraphicsDeviceType::DirectX11)
 		{
-			return new Manager_Impl_GL();
+			return new Manager_Impl_DX11();
 		}
-		return new Manager_Impl_DX11();
 #endif
+		return new Manager_Impl_GL();
 	}
 
 	Context* Context::Create(Manager* manager)
@@ -138,12 +141,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Context_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new Context_Impl_GL();
+			return new Context_Impl_DX11();
 		}
-		return new Context_Impl_DX11();
 #endif
+		return new Context_Impl_GL();
 	}
 
 	Compiler* Compiler::Create(Manager* manager)
@@ -157,12 +160,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Compiler();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new Compiler();
+			return new Compiler_Impl_DX11();
 		}
-		return new Compiler();
 #endif
+		return new Compiler_Impl_GL();
 	}
 
 	VertexBuffer* VertexBuffer::Create(Manager* manager)
@@ -176,12 +179,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new VertexBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new VertexBuffer_Impl_GL();
+			return new VertexBuffer_Impl_DX11();
 		}
-		return new VertexBuffer_Impl_DX11();
 #endif
+		return new VertexBuffer_Impl_GL();
 	}
 
 	IndexBuffer* IndexBuffer::Create(Manager* manager)
@@ -195,12 +198,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new IndexBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new IndexBuffer_Impl_GL();
+			return new IndexBuffer_Impl_DX11();
 		}
-		return new IndexBuffer_Impl_DX11();
 #endif
+		return new IndexBuffer_Impl_GL();
 	}
 
 	ConstantBuffer* ConstantBuffer::Create(Manager* manager)
@@ -214,15 +217,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new ConstantBuffer_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new ConstantBuffer_Impl_GL();
+			return new ConstantBuffer_Impl_DX11();
 		}
-		return new ConstantBuffer_Impl_DX11();
 #endif
+		return new ConstantBuffer_Impl_GL();
 	}
 
-	Shader*Shader::Create(Manager* manager)
+	Shader* Shader::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new Shader_Impl_PSVITA();
@@ -233,12 +236,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Shader_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new Shader_Impl_GL();
+			return new Shader_Impl_DX11();
 		}
-		return new Shader_Impl_DX11();
 #endif
+		return new Shader_Impl_GL();
 	}
 
 	Texture2D*Texture2D::Create(Manager* manager)
@@ -252,15 +255,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new Texture2D_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new Texture2D_Impl_GL();
+			return new Texture2D_Impl_DX11();
 		}
-		return new Texture2D_Impl_DX11();
 #endif
+		return new Texture2D_Impl_GL();
 	}
 
-	RenderTexture2D*RenderTexture2D::Create(Manager* manager)
+	RenderTexture2D* RenderTexture2D::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new RenderTexture2D_Impl_PSVITA();
@@ -271,12 +274,12 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new RenderTexture2D_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new RenderTexture2D_Impl_GL();
+			return new RenderTexture2D_Impl_DX11();
 		}
-		return new RenderTexture2D_Impl_DX11();
 #endif
+		return new RenderTexture2D_Impl_GL();
 	}
 
 	DepthTexture* DepthTexture::Create(Manager* manager)
@@ -290,15 +293,15 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new DepthTexture_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new DepthTexture_Impl_GL();
+			return new DepthTexture_Impl_DX11();
 		}
-		return new DepthTexture_Impl_DX11();
 #endif
+		return new DepthTexture_Impl_GL();
 	}
 
-	CubemapTexture*CubemapTexture::Create(Manager* manager)
+	CubemapTexture* CubemapTexture::Create(Manager* manager)
 	{
 #if defined(_PSVITA)
 		return new CubemapTexture_Impl_PSVITA();
@@ -309,11 +312,11 @@ namespace ar
 #elif defined(_XBOXONE)
 		return new CubemapTexture_Impl_XBOXONE();
 #elif defined(_WIN32)
-		if (manager->GetDeviceType() == GraphicsDeviceType::OpenGL)
+		if (manager->GetDeviceType() == GraphicsDeviceType::DirectX11)
 		{
-			return new CubemapTexture_Impl_GL();
+			return new CubemapTexture_Impl_DX11();
 		}
-		return new CubemapTexture_Impl_DX11();
 #endif
+		return new CubemapTexture_Impl_GL();
 	}
 }

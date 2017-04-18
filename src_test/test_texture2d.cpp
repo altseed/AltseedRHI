@@ -142,7 +142,7 @@ void test_texture2d(ar::GraphicsDeviceType device)
 		{
 			if (joystick->GetJoystickType(0) == ap::JoystickType::PS4)
 			{
-				if (joystick->GetButtonState(0, ap::JoystickButtonType::Circle) == ap::InputState::Push)
+				if (joystick->GetButtonState(0, ap::JoystickButtonType::RightRight) == ap::InputState::Push)
 				{
 					break;
 				}

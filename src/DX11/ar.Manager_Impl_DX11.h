@@ -33,6 +33,8 @@ namespace ar
 
 		void Present() override;
 
+		std::array<void*, 2> GetInternalObjects() const override;
+
 		bool SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height);
 
 		ID3D11Device* GetDevice() const { return device; }

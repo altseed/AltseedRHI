@@ -241,6 +241,14 @@ namespace ar
 		swapChain->Present(0, 0);
 	}
 
+	std::array<void*, 2> Manager_Impl_DX11::GetInternalObjects() const
+	{
+		std::array<void*, 2> ret;
+		ret[0] = device;
+		ret[1] = context;
+		return ret;
+	}
+
 	bool Manager_Impl_DX11::SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height)
 	{
 		ID3D11Texture2D* texture_ = nullptr;
