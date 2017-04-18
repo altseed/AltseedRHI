@@ -1,10 +1,44 @@
 cmake_minimum_required(VERSION 2.8)
 project(AltseedRHI CXX)
 
+FILE(GLOB hs *.h)
+FILE(GLOB cpps *.cpp)
 
-FILE(GLOB_RECURSE cpps *.cpp)
+if (MSVC)
+	FILE(GLOB hs_dx11 DX11/*.h)
+	FILE(GLOB cpps_dx11 DX11/*.cpp)
+	FILE(GLOB hs_gl GL/*.h)
+	FILE(GLOB cpps_gl GL/*.cpp)
+	FILE(GLOB hs_win Win/*.h)
+	FILE(GLOB cpps_win Win/*.cpp)
+	FILE(GLOB hs_th 3rdParty/*.h)
+	FILE(GLOB cpps_th 3rdParty/*.cpp)
 
-FILE(GLOB_RECURSE hs *.h)
+	list(APPEND hs ${hs_dx11})
+	list(APPEND cpps ${cpps_dx11})
+	list(APPEND hs ${hs_gl})
+	list(APPEND cpps ${cpps_gl})
+	list(APPEND hs ${hs_win})
+	list(APPEND cpps ${cpps_win})
+	list(APPEND hs ${hs_th})
+	list(APPEND cpps ${cpps_th})
+
+else()
+	FILE(GLOB hs_gl GL/*.h)
+	FILE(GLOB cpps_gl GL/*.cpp)
+	FILE(GLOB hs_nix Nix/*.h)
+	FILE(GLOB cpps_nix Nix/*.cpp)
+	FILE(GLOB hs_th 3rdParty/nv_dds/*.h)
+	FILE(GLOB cpps_th 3rdParty/nv_dds/*.cpp)
+
+	list(APPEND hs ${hs_gl})
+	list(APPEND cpps ${cpps_gl})
+	list(APPEND hs ${hs_nix})
+	list(APPEND cpps ${cpps_nix})
+	list(APPEND hs ${hs_th})
+	list(APPEND cpps ${cpps_th})
+
+endif()
 
 foreach(FILE ${hs}) 
     # Get the directory of the source file
