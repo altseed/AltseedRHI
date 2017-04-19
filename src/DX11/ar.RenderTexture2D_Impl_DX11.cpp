@@ -91,6 +91,7 @@ namespace ar
 			goto End;
 		}
 
+		this->manager = manager;
 		this->width = width;
 		this->height = height;
 		this->format = format;
@@ -102,5 +103,15 @@ namespace ar
 		SafeRelease(textureSRV);
 		SafeRelease(textureRTV);
 		return false;
+	}
+
+
+	bool RenderTexture2D_Impl_DX11::Save(std::vector<Color>& dst, int32_t& width, int32_t& height)
+	{
+		auto m = (Manager_Impl_DX11*)manager;
+		width = this->width;
+		height = this->height;
+
+		return m->SaveTexture(dst, texture, this->width, this->height);
 	}
 }

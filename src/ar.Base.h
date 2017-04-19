@@ -619,6 +619,8 @@ namespace ar
 
 		virtual void Unlock() {}
 
+		virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
+
 		int32_t GetWidth() const { return width; }
 
 		int32_t GetHeight() const { return height; }

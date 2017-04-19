@@ -31,6 +31,8 @@ public:
 
 	void Unlock() override;
 
+	virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
+
 	ID3D11ShaderResourceView* GetShaderResourceView() const { return textureSRV; }
 };
 

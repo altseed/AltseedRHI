@@ -118,10 +118,20 @@ namespace ar
 
 		GLCheckError();
 
+		this->manager = manager;
 		this->width = width;
 		this->height = height;
 		this->format = format;
 
 		return true;
+	}
+
+	bool RenderTexture2D_Impl_GL::Save(std::vector<Color>& dst, int32_t& width, int32_t& height)
+	{
+		auto m = (Manager_Impl_GL*)manager;
+		width = this->width;
+		height = this->height;
+
+		return m->SaveTexture(dst, texture, this->width, this->height);
 	}
 }

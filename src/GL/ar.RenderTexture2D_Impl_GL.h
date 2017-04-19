@@ -12,6 +12,7 @@ class RenderTexture2D_Impl_GL
 	: public RenderTexture2D
 {
 private:
+	Manager*		manager = nullptr;
 	GLuint	texture = 0;
 
 public:
@@ -20,6 +21,8 @@ public:
 	virtual ~RenderTexture2D_Impl_GL();
 
 	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format);
+
+	virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
 	GLuint GetTexture() const { return texture; }
 };
