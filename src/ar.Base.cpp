@@ -126,8 +126,11 @@ namespace ar
 		{
 			return new Manager_Impl_DX11();
 		}
-#endif
 		return new Manager_Impl_GL();
+#else
+		return new Manager_Impl_GL();
+#endif
+
 	}
 
 	Context* Context::Create(Manager* manager)
@@ -145,8 +148,10 @@ namespace ar
 		{
 			return new Context_Impl_DX11();
 		}
-#endif
 		return new Context_Impl_GL();
+#else
+		return new Context_Impl_GL();
+#endif
 	}
 
 	Compiler* Compiler::Create(Manager* manager)
@@ -164,8 +169,10 @@ namespace ar
 		{
 			return new Compiler_Impl_DX11();
 		}
-#endif
 		return new Compiler_Impl_GL();
+#else
+		return new Compiler_Impl_GL();
+#endif
 	}
 
 	VertexBuffer* VertexBuffer::Create(Manager* manager)
@@ -183,8 +190,10 @@ namespace ar
 		{
 			return new VertexBuffer_Impl_DX11();
 		}
-#endif
 		return new VertexBuffer_Impl_GL();
+#else
+		return new VertexBuffer_Impl_GL();
+#endif
 	}
 
 	IndexBuffer* IndexBuffer::Create(Manager* manager)
@@ -202,8 +211,10 @@ namespace ar
 		{
 			return new IndexBuffer_Impl_DX11();
 		}
-#endif
 		return new IndexBuffer_Impl_GL();
+#else
+		return new IndexBuffer_Impl_GL();
+#endif
 	}
 
 	ConstantBuffer* ConstantBuffer::Create(Manager* manager)
@@ -221,8 +232,10 @@ namespace ar
 		{
 			return new ConstantBuffer_Impl_DX11();
 		}
-#endif
 		return new ConstantBuffer_Impl_GL();
+#else
+		return new ConstantBuffer_Impl_GL();
+#endif
 	}
 
 	Shader* Shader::Create(Manager* manager)
@@ -240,8 +253,10 @@ namespace ar
 		{
 			return new Shader_Impl_DX11();
 		}
-#endif
 		return new Shader_Impl_GL();
+#else
+		return new Shader_Impl_GL();
+#endif
 	}
 
 	Texture2D*Texture2D::Create(Manager* manager)
@@ -259,8 +274,10 @@ namespace ar
 		{
 			return new Texture2D_Impl_DX11();
 		}
-#endif
 		return new Texture2D_Impl_GL();
+#else
+		return new Texture2D_Impl_GL();
+#endif
 	}
 
 	RenderTexture2D* RenderTexture2D::Create(Manager* manager)
@@ -278,8 +295,10 @@ namespace ar
 		{
 			return new RenderTexture2D_Impl_DX11();
 		}
-#endif
 		return new RenderTexture2D_Impl_GL();
+#else
+		return new RenderTexture2D_Impl_GL();
+#endif
 	}
 
 	DepthTexture* DepthTexture::Create(Manager* manager)
@@ -297,8 +316,10 @@ namespace ar
 		{
 			return new DepthTexture_Impl_DX11();
 		}
-#endif
 		return new DepthTexture_Impl_GL();
+#else
+		return new DepthTexture_Impl_GL();
+#endif
 	}
 
 	CubemapTexture* CubemapTexture::Create(Manager* manager)
@@ -316,7 +337,9 @@ namespace ar
 		{
 			return new CubemapTexture_Impl_DX11();
 		}
-#endif
 		return new CubemapTexture_Impl_GL();
+#else
+		return new CubemapTexture_Impl_GL();
+#endif
 	}
 }
