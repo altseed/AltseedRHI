@@ -24,10 +24,17 @@ namespace ar
 	{
 		ImageHelper::Initizlize();
 		deviceType = GraphicsDeviceType::DirectX11;
+		currentBackRenderTargetViews.fill(nullptr);
 	}
 
 	Manager_Impl_DX11::~Manager_Impl_DX11()
 	{
+		for (auto& v : currentBackRenderTargetViews)
+		{
+			SafeRelease(v);
+		}
+		SafeRelease(currentDepthStencilView);
+
 		SafeRelease(device);
 		SafeRelease(context);
 		SafeRelease(dxgiFactory);
@@ -240,6 +247,19 @@ namespace ar
 		{
 			context->OMSetRenderTargets(1, &defaultBackRenderTargetView, defaultDepthStencilView);
 			SetViewport(0, 0, windowWidth, windowHeight);
+
+			// Reset current buffers
+			for (auto& v : currentBackRenderTargetViews)
+			{
+				SafeRelease(v);
+			}
+			SafeRelease(currentDepthStencilView);
+
+			currentBackRenderTargetViews[0] = defaultBackRenderTargetView;
+			currentDepthStencilView = defaultDepthStencilView;
+
+			SafeAddRef(currentBackRenderTargetViews[0]);
+			SafeAddRef(currentDepthStencilView);
 		}
 		else
 		{
@@ -263,6 +283,22 @@ namespace ar
 				context->OMSetRenderTargets(4, rt, ds);
 				SetViewport(0, 0, param.RenderTargets[0]->GetWidth(), param.RenderTargets[0]->GetHeight());
 			}
+
+			// Reset current buffers
+			for (auto& v : currentBackRenderTargetViews)
+			{
+				SafeRelease(v);
+			}
+			SafeRelease(currentDepthStencilView);
+
+			for (int32_t i = 0; i < MaxRenderTarget; i++)
+			{
+				currentBackRenderTargetViews[i] = rt[i];
+				SafeAddRef(currentBackRenderTargetViews[i]);
+			}
+			currentDepthStencilView = defaultDepthStencilView;
+			
+			SafeAddRef(currentDepthStencilView);
 		}
 
 	}
@@ -276,6 +312,25 @@ namespace ar
 	{
 		// Not sync
 		swapChain->Present(0, 0);
+	}
+
+	void Manager_Impl_DX11::Clear(bool isColorTarget, bool isDepthTarget, const Color& color)
+	{
+		if (isColorTarget)
+		{
+			float ClearColor[] = { color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f };
+
+			for (auto i = 0; i < MaxRenderTarget; i++)
+			{
+				if (currentBackRenderTargetViews[i] == nullptr) continue;
+				context->ClearRenderTargetView(currentBackRenderTargetViews[i], ClearColor);
+			}
+		}
+
+		if (isDepthTarget && currentDepthStencilView != nullptr)
+		{
+			context->ClearDepthStencilView(currentDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		}
 	}
 
 	bool Manager_Impl_DX11::SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height)
@@ -322,6 +377,11 @@ namespace ar
 		SafeRelease(defaultDepthBuffer);
 		SafeRelease(defaultDepthStencilView);
 
+		for (auto& v : currentBackRenderTargetViews)
+		{
+			SafeRelease(v);
+		}
+		SafeRelease(currentDepthStencilView);
 
 		windowWidth = width;
 		windowHeight = height;
@@ -363,6 +423,14 @@ namespace ar
 		device->CreateDepthStencilView(defaultDepthBuffer, &viewDesc, &defaultDepthStencilView);
 
 		context->OMSetRenderTargets(1, &defaultBackRenderTargetView, defaultDepthStencilView);
+
+		currentBackRenderTargetViews[0] = defaultBackRenderTargetView;
+		currentDepthStencilView = defaultDepthStencilView;
+
+		SafeAddRef(currentBackRenderTargetViews[0]);
+		SafeAddRef(currentDepthStencilView);
+
+		return true;
 	}
 
 	std::array<void*, 2> Manager_Impl_DX11::GetInternalObjects() const

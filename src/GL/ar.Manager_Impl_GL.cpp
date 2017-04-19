@@ -120,6 +120,33 @@ namespace ar
 	{
     }
 
+	void Manager_Impl_GL::Clear(bool isColorTarget, bool isDepthTarget, const Color& color)
+	{
+		GLbitfield bit = 0;
+		if (isColorTarget)
+		{
+			bit = bit | GL_COLOR_BUFFER_BIT;
+			glClearColor(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
+		}
+
+		if (isDepthTarget)
+		{
+			// GL_DEPTH_TEST & WRITE を有効化しないとクリアできない
+			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_TRUE);
+
+			bit = bit | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+			glClearDepth(1.0f);
+		}
+
+		if (bit != 0)
+		{
+			glClear(bit);
+		}
+
+		GLCheckError();
+	}
+
 	bool Manager_Impl_GL::SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height)
 	{
 		GLCheckError();

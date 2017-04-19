@@ -375,6 +375,13 @@ namespace ar
 
 		virtual void Present() {}
 
+		/**
+			@brief	Clear current render tagets.
+			@note
+			Context::Begin is required after executing Manager::Clear.
+		*/
+		virtual void Clear(bool isColorTarget, bool isDepthTarget, const Color& color) {}
+
 		virtual bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
 
 		virtual bool SetIsFullscreenMode(bool isFullscreenMode) { return false; }

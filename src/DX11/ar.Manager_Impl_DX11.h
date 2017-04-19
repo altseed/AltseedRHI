@@ -22,6 +22,9 @@ namespace ar
 		ID3D11Texture2D*			defaultDepthBuffer = nullptr;
 		ID3D11DepthStencilView*		defaultDepthStencilView = nullptr;
 
+		std::array<ID3D11RenderTargetView*, MaxRenderTarget>	currentBackRenderTargetViews;
+		ID3D11DepthStencilView*		currentDepthStencilView = nullptr;
+
 		void SetViewport(int32_t x, int32_t y, int32_t width, int32_t height);
 
 	public:
@@ -35,6 +38,8 @@ namespace ar
 		void EndScene() override;
 
 		void Present() override;
+
+		void Clear(bool isColorTarget, bool isDepthTarget, const Color& color) override;
 
 		bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
