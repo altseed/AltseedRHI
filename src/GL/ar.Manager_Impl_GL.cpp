@@ -47,6 +47,7 @@ namespace ar
 
 		windowWidth = param.WindowWidth;
 		windowHeight = param.WindowHeight;
+		colorSpaceType = param.ColorSpace;
 
 		return ErrorCode::OK;
 	}

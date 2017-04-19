@@ -202,6 +202,7 @@ namespace ar
 
 		windowWidth = param.WindowWidth;
 		windowHeight = param.WindowHeight;
+		colorSpaceType = param.ColorSpace;
 
 		result = ErrorCode::OK;
 		return result;
@@ -290,6 +291,78 @@ namespace ar
 		height = windowHeight;
 
 		return ret;
+	}
+
+	bool Manager_Impl_DX11::SetIsFullscreenMode(bool isFullscreenMode)
+	{
+		BOOL isScreenMode = FALSE;
+		swapChain->GetFullscreenState(&isScreenMode, 0);
+
+		if (isScreenMode && isFullscreenMode) return true;
+		if (!isScreenMode && !isFullscreenMode) return true;
+
+		if (isFullscreenMode)
+		{
+			swapChain->SetFullscreenState(TRUE, 0);
+		}
+		else
+		{
+			swapChain->SetFullscreenState(FALSE, 0);
+		}
+
+		return true;
+	}
+
+	bool Manager_Impl_DX11::SetWindowSize(int32_t width, int32_t height)
+	{
+		// Reset
+		context->OMSetRenderTargets(1, &defaultBackRenderTargetView, defaultDepthStencilView);
+		SafeRelease(defaultBack);
+		SafeRelease(defaultBackRenderTargetView);
+		SafeRelease(defaultDepthBuffer);
+		SafeRelease(defaultDepthStencilView);
+
+
+		windowWidth = width;
+		windowHeight = height;
+
+		DXGI_FORMAT format;
+
+		if (colorSpaceType == ColorSpaceType::LinearSpace)
+		{
+			format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		}
+		else
+		{
+			format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		}
+
+		swapChain->ResizeBuffers(1, windowWidth, windowHeight, format, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+
+		swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&defaultBack);
+		device->CreateRenderTargetView(defaultBack, NULL, &defaultBackRenderTargetView);
+
+		D3D11_TEXTURE2D_DESC descDepth;
+		descDepth.Width = windowWidth;
+		descDepth.Height = windowHeight;
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		descDepth.CPUAccessFlags = 0;
+		descDepth.MiscFlags = 0;
+		device->CreateTexture2D(&descDepth, NULL, &defaultDepthBuffer);
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC viewDesc;
+		viewDesc.Format = descDepth.Format;
+		viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+		viewDesc.Flags = 0;
+		device->CreateDepthStencilView(defaultDepthBuffer, &viewDesc, &defaultDepthStencilView);
+
+		context->OMSetRenderTargets(1, &defaultBackRenderTargetView, defaultDepthStencilView);
 	}
 
 	std::array<void*, 2> Manager_Impl_DX11::GetInternalObjects() const

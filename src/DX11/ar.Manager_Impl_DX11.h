@@ -38,6 +38,10 @@ namespace ar
 
 		bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
+		bool SetIsFullscreenMode(bool isFullscreenMode) override;
+
+		bool SetWindowSize(int32_t width, int32_t height) override;
+
 		std::array<void*, 2> GetInternalObjects() const override;
 
 		bool SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height);

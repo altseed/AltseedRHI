@@ -359,6 +359,7 @@ namespace ar
 	protected:
 		int32_t	windowWidth = 0;
 		int32_t	windowHeight = 0;
+		ColorSpaceType		colorSpaceType = ColorSpaceType::GammaSpace;
 		GraphicsDeviceType	deviceType = GraphicsDeviceType::Default;
 
 	public:
@@ -376,6 +377,10 @@ namespace ar
 		virtual void Present() {}
 
 		virtual bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
+
+		virtual bool SetIsFullscreenMode(bool isFullscreenMode) { return false; }
+
+		virtual bool SetWindowSize(int32_t width, int32_t height) { return false; }
 
 		virtual std::array<void*, 2> GetInternalObjects() const { return std::array<void*, 2>(); }
 
