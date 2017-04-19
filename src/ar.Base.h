@@ -340,6 +340,10 @@ namespace ar
 		bool			IsDepthWrite = false;
 		CullingType		Culling = CullingType::Front;
 
+		int32_t			VertexOffset = 0;
+		int32_t			IndexOffset = 0;
+		int32_t			IndexCount = 0;
+
 		int32_t			InstanceCount = 1;
 
 		DrawParameter()

@@ -59,7 +59,9 @@ namespace ar
 		if (count > vertexCount) return nullptr;
 		if (!isDynamic) return nullptr;
 
-		if (ringOffset + count >= vertexCount)
+		// Todo : correct it.
+		if(true)
+		//if (ringOffset + count >= vertexCount)
 		{
 			ringOffset = 0;
 		}

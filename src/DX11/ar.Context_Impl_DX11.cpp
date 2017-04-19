@@ -394,16 +394,15 @@ namespace ar
 		// Draw
 		if (param.InstanceCount == 1)
 		{
-			int32_t vertexBufferOffset = 0;
 			context->DrawIndexed(
-				ib->GetIndexCount(),
-				0,
-				vertexBufferOffset);
+				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
+				param.IndexOffset,
+				param.VertexOffset);
 		}
 		else
 		{
 			context->DrawIndexedInstanced(
-				ib->GetIndexCount(),
+				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
 				param.InstanceCount,
 				0,
 				0,

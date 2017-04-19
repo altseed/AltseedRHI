@@ -319,14 +319,24 @@ namespace ar
 		GLCheckError();
 
 		int32_t indexType = ib->GetIs32Bit() ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
+		int32_t isize = ib->GetIs32Bit() ? 4 : 2;
 
 		if (param.InstanceCount == 1)
 		{
-			glDrawElements(GL_TRIANGLES, ib->GetIndexCount(), indexType, NULL);
+			glDrawElements(
+				GL_TRIANGLES, 
+				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
+				indexType, 
+				(void*)(param.IndexOffset * isize));
 		}
 		else
 		{
-			glDrawElementsInstanced(GL_TRIANGLES, ib->GetIndexCount(), indexType, NULL, param.InstanceCount);
+			glDrawElementsInstanced(
+				GL_TRIANGLES, 
+				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
+				indexType,
+				(void*)(param.IndexOffset * isize),
+				param.InstanceCount);
 		}
 		GLCheckError();
 
