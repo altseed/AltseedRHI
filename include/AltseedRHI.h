@@ -429,6 +429,8 @@ namespace ar
 	protected:
 		int32_t			vertexSize = 0;
 		int32_t			vertexCount = 0;
+		int32_t			vertexOffset = 0;
+
 		bool			isDynamic = false;
 		
 	public:
@@ -447,6 +449,8 @@ namespace ar
 
 		int32_t GetVertexSize() const { return vertexSize; }
 
+		int32_t GetVertexOffset() const { return vertexOffset; }
+
 		static VertexBuffer* Create(Manager* manager);
 	};
 
@@ -454,16 +458,19 @@ namespace ar
 	{
 	protected:
 		int32_t			indexCount = 0;
+		bool			is32bit = false;
 
 	public:
 		IndexBuffer() {}
 		virtual ~IndexBuffer() {}
 
-		virtual bool Initialize(Manager* manager, int32_t indexCount) { return false; }
+		virtual bool Initialize(Manager* manager, int32_t indexCount, bool is32bit) { return false; }
 
 		virtual bool Write(const void* data, int32_t size) { return false; }
 
 		int32_t GetIndexCount() const { return indexCount; }
+
+		bool GetIs32Bit() const { return is32bit; }
 
 		static IndexBuffer* Create(Manager* manager);
 	};

@@ -278,7 +278,14 @@ namespace ar
 		context->IASetVertexBuffers(0, 1, &vbuf, &vertexSize, &voffset);
 		
 		// Set index buffer
-		context->IASetIndexBuffer(ib->GetBuffer(), DXGI_FORMAT_R16_UINT, 0);
+		if (ib->GetIs32Bit())
+		{
+			context->IASetIndexBuffer(ib->GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		}
+		else
+		{
+			context->IASetIndexBuffer(ib->GetBuffer(), DXGI_FORMAT_R16_UINT, 0);
+		}
 
 		// Set shader
 		context->VSSetShader(shader->GetVertexShader(), NULL, 0);

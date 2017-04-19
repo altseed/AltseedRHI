@@ -20,7 +20,7 @@ namespace ar
 
 		virtual ~IndexBuffer_Impl_GL();
 
-		bool Initialize(Manager* manager, int32_t indexCount) override;
+		bool Initialize(Manager* manager, int32_t indexCount, bool is32bit) override;
 
 		bool Write(const void* data, int32_t size) override;
 

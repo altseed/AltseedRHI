@@ -15,7 +15,7 @@ namespace ar
         glDeleteBuffers(1, &buffer);
 	}
 
-	bool IndexBuffer_Impl_GL::Initialize(Manager* manager, int32_t indexCount)
+	bool IndexBuffer_Impl_GL::Initialize(Manager* manager, int32_t indexCount, bool is32bit)
 	{
 		auto m = (Manager_Impl_GL*)manager;
         
@@ -23,18 +23,21 @@ namespace ar
         
 		this->manager = manager;
         this->indexCount = indexCount;
-        
+		this->is32bit = is32bit;
+
         return glGetError() == GL_NO_ERROR;
 	}
 
 	bool IndexBuffer_Impl_GL::Write(const void* data, int32_t size)
 	{
-		if (size != indexCount * sizeof(int16_t)) return false;
+		int32_t isize = is32bit ? 4 : 2;
+
+		if (size != indexCount * isize) return false;
 
 		auto m = (Manager_Impl_GL*)manager;
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(int16_t), data, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * isize, data, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		return true;

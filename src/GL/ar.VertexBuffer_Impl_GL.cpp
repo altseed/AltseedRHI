@@ -49,6 +49,7 @@ namespace ar
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		ringOffset = 0;
+		vertexOffset = ringOffset;
 
 		return true;
 	}
@@ -66,6 +67,7 @@ namespace ar
 		auto p = &(dynamicBuffer[ringOffset * vertexSize]);
 
 		ringLocked = count;
+		vertexOffset = ringOffset;
 
 		return p;
 	}

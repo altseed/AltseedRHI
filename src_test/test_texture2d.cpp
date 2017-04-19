@@ -67,7 +67,7 @@ void test_texture2d(ar::GraphicsDeviceType device)
 	vertexBuffer->Write(vbuffer.data(), sizeof(SimpleVertex) * 4);
 
 	auto indexBuffer = ar::IndexBuffer::Create(manager);
-	indexBuffer->Initialize(manager, 6);
+	indexBuffer->Initialize(manager, 6, false);
 
 	std::array<int16_t, 6> ibuffer;
 	ibuffer[0] = 0;

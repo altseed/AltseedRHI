@@ -15,8 +15,10 @@ namespace ar
 		SafeRelease(buffer);
 	}
 
-	bool IndexBuffer_Impl_DX11::Initialize(Manager* manager, int32_t indexCount)
+	bool IndexBuffer_Impl_DX11::Initialize(Manager* manager, int32_t indexCount, bool is32bit)
 	{
+		int32_t isize = is32bit ? 4 : 2;
+
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
 		std::vector< D3D11_INPUT_ELEMENT_DESC> decl;
@@ -25,11 +27,11 @@ namespace ar
 		ZeroMemory(&hBufferDesc, sizeof(hBufferDesc));
 
 		hBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		hBufferDesc.ByteWidth = sizeof(int16_t) * indexCount;
+		hBufferDesc.ByteWidth = isize * indexCount;
 		hBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		hBufferDesc.CPUAccessFlags = 0;
 		hBufferDesc.MiscFlags = 0;
-		hBufferDesc.StructureByteStride = sizeof(int16_t);
+		hBufferDesc.StructureByteStride = isize;
 
 		D3D11_SUBRESOURCE_DATA hSubResourceData;
 		hSubResourceData.pSysMem = NULL;
@@ -45,6 +47,7 @@ namespace ar
 
 		this->manager = manager;
 		this->indexCount = indexCount;
+		this->is32bit = is32bit;
 
 		return true;
 
@@ -56,7 +59,9 @@ namespace ar
 
 	bool IndexBuffer_Impl_DX11::Write(const void* data, int32_t size)
 	{
-		if (size != indexCount * sizeof(int16_t)) return false;
+		int32_t isize = is32bit ? 4 : 2;
+
+		if (size != indexCount * isize) return false;
 
 		auto m = (Manager_Impl_DX11*)manager;
 
