@@ -36,6 +36,9 @@ namespace ar
 		SafeRelease(defaultBack);
 		SafeRelease(defaultBackRenderTargetView);
 
+		SafeRelease(defaultDepthBuffer);
+		SafeRelease(defaultDepthStencilView);
+
 		ImageHelper::Terminate();
 	}
 
@@ -161,6 +164,37 @@ namespace ar
 			goto End;
 		}
 
+		// Create depth buffer
+		D3D11_TEXTURE2D_DESC descDepth;
+		descDepth.Width = param.WindowWidth;
+		descDepth.Height = param.WindowHeight;
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		descDepth.CPUAccessFlags = 0;
+		descDepth.MiscFlags = 0;
+
+
+		if (FAILED(device->CreateTexture2D(&descDepth, NULL, &defaultDepthBuffer)))
+		{
+			result = ErrorCode::FailedToCreateDepthBuffer;
+			goto End;
+		}
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC viewDesc;
+		viewDesc.Format = descDepth.Format;
+		viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+		viewDesc.Flags = 0;
+		if (FAILED(device->CreateDepthStencilView(defaultDepthBuffer, &viewDesc, &defaultDepthStencilView)))
+		{
+			result = ErrorCode::FailedToCreateDepthBufferView;
+			goto End;
+		}
+
 		for (auto a : adapters)
 		{
 			a->Release();
@@ -185,6 +219,8 @@ namespace ar
 		SafeRelease(swapChain);
 		SafeRelease(defaultBack);
 		SafeRelease(defaultBackRenderTargetView);
+		SafeRelease(defaultDepthBuffer);
+		SafeRelease(defaultDepthStencilView);
 
 		return result;
 	}
@@ -201,7 +237,7 @@ namespace ar
 
 		if (param.RenderTargets[0] == nullptr)
 		{
-			context->OMSetRenderTargets(1, &defaultBackRenderTargetView, nullptr);
+			context->OMSetRenderTargets(1, &defaultBackRenderTargetView, defaultDepthStencilView);
 			SetViewport(0, 0, windowWidth, windowHeight);
 		}
 		else

@@ -38,7 +38,7 @@ void test_texture2d(ar::GraphicsDeviceType device)
 	manager->Initialize(mparam);
 
 	auto vertexBuffer = ar::VertexBuffer::Create(manager);
-	vertexBuffer->Initialize(manager, sizeof(SimpleVertex), 4);
+	vertexBuffer->Initialize(manager, sizeof(SimpleVertex), 4, false);
 
 	std::array<SimpleVertex, 4> vbuffer;
 	vbuffer[0].x = -1.0f;

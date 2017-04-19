@@ -26,7 +26,8 @@ namespace ar
 		FailedToCreateSwapChain,
 		FailedToGetBackBuffer,
 		FailedToCreateBackBufferTarget,
-
+		FailedToCreateDepthBuffer,
+		FailedToCreateDepthBufferView,
 		FailedToInitializeGlew,
 	};
 
