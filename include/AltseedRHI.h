@@ -286,8 +286,6 @@ namespace ar
 		std::string Definition;
 
 		ShaderMacro()
-			: Name(nullptr)
-			, Definition(nullptr)
 		{
 		}
 

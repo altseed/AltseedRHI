@@ -160,6 +160,14 @@ namespace ar
 			macros.push_back(m_);
 		}
 
+		if (macros.size() > 0)
+		{
+			D3D_SHADER_MACRO m_;
+			m_.Definition = NULL;
+			m_.Name = NULL;
+			macros.push_back(m_);
+		}
+
 		std::string log;
 
 		auto vs = CompileVertexShader(param.VertexShaderTexts[0].c_str(), "", macros, false, log);
