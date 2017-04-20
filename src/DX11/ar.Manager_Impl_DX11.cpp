@@ -296,7 +296,7 @@ namespace ar
 				currentBackRenderTargetViews[i] = rt[i];
 				SafeAddRef(currentBackRenderTargetViews[i]);
 			}
-			currentDepthStencilView = defaultDepthStencilView;
+			currentDepthStencilView = ds;
 			
 			SafeAddRef(currentDepthStencilView);
 		}
