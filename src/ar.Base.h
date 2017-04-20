@@ -671,11 +671,22 @@ namespace ar
 	class CubemapTexture
 		: public Texture
 	{
+	protected:
+		int32_t width = 0;
+		int32_t height = 0;
+		int32_t	mipmapCount = 0;
+		
 	public:
 		CubemapTexture() {}
 		virtual ~CubemapTexture() {}
 
 		virtual bool Initialize(Manager* manager, void* data, int32_t size) { return false; }
+
+		int32_t GetWidth() const { return width; }
+
+		int32_t GetHeight() const { return height; }
+
+		int32_t GetMipmapCount() const { return mipmapCount; }
 
 		TextureType GetType() const override { return TextureType::CubemapTexture; }
 

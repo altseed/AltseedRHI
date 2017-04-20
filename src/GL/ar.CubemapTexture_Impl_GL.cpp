@@ -62,7 +62,10 @@ namespace ar
 
 		// TODO : correct
 		this->format = TextureFormat::R8G8B8A8_UNORM;
-
+		
+		this->width = image.get_width();
+		this->height = image.get_height();
+		this->mipmapCount = image.get_num_mipmaps();
 		return false;
 	}
 }

@@ -53,6 +53,9 @@ namespace ar
 		D3D11_TEXTURE2D_DESC desc;
 		texture_->GetDesc(&desc);
 
+		this->width = desc.Width;
+		this->height = desc.Height;
+		this->mipmapCount = cubeDesc.TextureCube.MipLevels;
 		this->format = GetTextureFormat(desc.Format);
 
 		return true;
