@@ -493,6 +493,10 @@ namespace ar
 	public:
 		ConstantBuffer() {}
 		virtual ~ConstantBuffer() {}
+		
+		virtual bool Initialize(Manager* manager, int32_t size) { return false; }
+
+		virtual void SetData(void* data, int32_t size, int32_t offset) {}
 
 		static ConstantBuffer* Create(Manager* manager);
 	};

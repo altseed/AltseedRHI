@@ -23,11 +23,11 @@ namespace ar
 
 		virtual ~ConstantBuffer_Impl_DX11();
 
-		bool Initialize(Manager* manager, int32_t size);
+		bool Initialize(Manager* manager, int32_t size) override;
 
-		void SetData(void* data, int32_t size, const ConstantLayout& layout)
+		void SetData(void* data, int32_t size, int32_t offset) override
 		{
-			memcpy(&(buffer[layout.Offset]), data, size);
+			memcpy(&(buffer[offset]), data, size);
 		}
 
 		uint8_t* GetBuffer() { return buffer.data(); }
