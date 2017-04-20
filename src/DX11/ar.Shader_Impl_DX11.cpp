@@ -157,15 +157,15 @@ namespace ar
 		SafeRelease(inputLayout);
 	}
 
-	bool Shader_Impl_DX11::Initialize(Manager* manager, const void* vs, int32_t vs_size, const void* ps, int32_t ps_size, const std::vector <VertexLayout>& layout)
+	bool Shader_Impl_DX11::Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout)
 	{
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
 		std::vector< D3D11_INPUT_ELEMENT_DESC> decl;
 
 		hr = m->GetDevice()->CreateVertexShader(
-			vs,
-			vs_size,
+			compilerResult.VertexShaderBuffer.data(),
+			compilerResult.VertexShaderBuffer.size(),
 			NULL,
 			&vertexShader);
 
@@ -175,8 +175,8 @@ namespace ar
 		}
 
 		hr = m->GetDevice()->CreatePixelShader(
-			ps,
-			ps_size,
+			compilerResult.PixelShaderBuffer.data(),
+			compilerResult.PixelShaderBuffer.size(),
 			NULL,
 			&pixelShader);
 
@@ -229,8 +229,8 @@ namespace ar
 		hr = m->GetDevice()->CreateInputLayout(
 			&(decl[0]),
 			decl.size(),
-			vs,
-			vs_size,
+			compilerResult.VertexShaderBuffer.data(),
+			compilerResult.VertexShaderBuffer.size(),
 			&inputLayout);
 
 		if (FAILED(hr))
@@ -243,14 +243,16 @@ namespace ar
 			vertexConstantBufferSize,
 			vertexTextureLayouts,
 			vertexTextureCount,
-			(uint8_t*)vs, vs_size);
+			(void*)compilerResult.VertexShaderBuffer.data(),
+			compilerResult.VertexShaderBuffer.size());
 
 		Reflect(
 			pixelConstantLayouts,
 			pixelConstantBufferSize,
 			pixelTextureLayouts,
 			pixelTextureCount,
-			(uint8_t*)ps, ps_size);
+			(void*)compilerResult.PixelShaderBuffer.data(),
+			compilerResult.PixelShaderBuffer.size());
 
 		return true;
 

@@ -37,7 +37,7 @@ namespace ar
 
 		virtual ~Shader_Impl_GL();
 
-		bool Initialize(Manager* manager, const void* vs, int32_t vs_size, const void* ps, int32_t ps_size, const std::vector <VertexLayout>& layout) override;
+		bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout) override;
 
 		GLuint GetShader() const { return program; }
 

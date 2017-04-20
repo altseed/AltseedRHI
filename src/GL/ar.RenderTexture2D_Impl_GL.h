@@ -20,7 +20,7 @@ public:
 
 	virtual ~RenderTexture2D_Impl_GL();
 
-	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format);
+	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format) override;
 
 	virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 

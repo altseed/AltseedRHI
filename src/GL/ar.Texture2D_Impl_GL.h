@@ -21,7 +21,7 @@ public:
 
 	virtual ~Texture2D_Impl_GL();
 
-	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable);
+	bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format, void* data, bool isEditable) override;
 
 	bool Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB) override;
 

@@ -3,7 +3,7 @@
 
 namespace ar
 {
-	static GLuint CompileShader(std::vector<char*>& vs_src, std::vector<char*>& ps_src, std::string& log)
+	static GLuint CompileShader(std::vector<const char*>& vs_src, std::vector<const char*>& ps_src, std::string& log)
 	{
 		std::vector<int32_t> vs_src_len;
 		std::vector<int32_t> ps_src_len;
@@ -135,8 +135,40 @@ namespace ar
 
 	bool Compiler_Impl_GL::Compile(ShaderCompilerResult& result, ShaderCompilerParameter& param)
 	{
-		std::vector<char*> vs_src;
-		std::vector<char*> ps_src;
+		std::vector<const char*> vs_src;
+		std::vector<const char*> ps_src;
+
+		auto gl_none = "";
+		auto gl_gl21 = "#version 120\r\n";
+		auto gl_gl33 = "#version 330\r\n";
+
+		if (param.OpenGLVersion == OpenGLVersionType::None)
+		{
+			vs_src.push_back(gl_none);
+			ps_src.push_back(gl_none);
+		}
+
+		if (param.OpenGLVersion == OpenGLVersionType::OpenGL21)
+		{
+			vs_src.push_back(gl_gl21);
+			ps_src.push_back(gl_gl21);
+		}
+
+		if (param.OpenGLVersion == OpenGLVersionType::OpenGL33)
+		{
+			vs_src.push_back(gl_gl33);
+			ps_src.push_back(gl_gl33);
+		}
+
+		std::string macros;
+
+		for (auto m : param.Macros)
+		{
+			macros += ("#define " + m.Definition + " " + m.Name + "\r\n");
+		}
+
+		vs_src.push_back(macros.c_str());
+		ps_src.push_back(macros.c_str());
 
 		for (auto& t : param.VertexShaderTexts)
 		{

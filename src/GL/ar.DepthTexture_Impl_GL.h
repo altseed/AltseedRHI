@@ -19,7 +19,7 @@ namespace ar
 
 		virtual ~DepthTexture_Impl_GL();
 
-		bool Initialize(Manager* manager, int32_t width, int32_t height);
+		bool Initialize(Manager* manager, int32_t width, int32_t height) override;
 
 		GLuint GetTexture() const { return buffer; }
 	};

@@ -18,7 +18,7 @@ namespace ar
 		CubemapTexture_Impl_GL();
 		virtual ~CubemapTexture_Impl_GL();
 
-		bool Initialize(Manager* manager, void* data, int32_t size);
+		bool Initialize(Manager* manager, void* data, int32_t size) override;
 
 		GLuint GetTexture() const { return texture; }
 	};

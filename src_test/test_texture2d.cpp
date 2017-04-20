@@ -96,7 +96,25 @@ void test_texture2d(ar::GraphicsDeviceType device)
 	LoadShaderFile(shader_vs, "texture2d_VS.dat", device);
 	LoadShaderFile(shader_ps, "texture2d_PS.dat", device);
 
-	shader->Initialize(manager, shader_vs.data(), shader_vs.size(), shader_ps.data(), shader_ps.size(), vertexLayouts);
+	ar::ShaderCompilerParameter compilerParam;
+	ar::ShaderCompilerResult compilerResult;
+
+	if (manager->GetDeviceType() == ar::GraphicsDeviceType::OpenGL)
+	{
+		auto compiler = ar::Compiler::Create(manager);
+		compilerParam.OpenGLVersion = ar::OpenGLVersionType::OpenGL33;
+		compilerParam.VertexShaderTexts.push_back((char*)shader_vs.data());
+		compilerParam.PixelShaderTexts.push_back((char*)shader_ps.data());
+		compiler->Compile(compilerResult, compilerParam);
+		delete compiler;
+	}
+	else
+	{
+		compilerResult.VertexShaderBuffer = shader_vs;
+		compilerResult.PixelShaderBuffer = shader_ps;
+	}
+
+	shader->Initialize(manager, compilerResult, vertexLayouts);
 
 	auto context = ar::Context::Create(manager);
 	context->Initialize(manager);

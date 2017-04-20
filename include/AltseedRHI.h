@@ -184,6 +184,13 @@ namespace ar
 		Unknown,
 	};
 
+	enum class OpenGLVersionType : int32_t
+	{
+		None,
+		OpenGL21,
+		OpenGL33,
+	};
+
 	struct VertexLayout
 	{
 		std::string			Name;
@@ -293,6 +300,7 @@ namespace ar
 
 	struct ShaderCompilerParameter
 	{
+		OpenGLVersionType			OpenGLVersion = OpenGLVersionType::None;
 		std::vector<ShaderMacro>	Macros;
 		std::vector<std::string>	VertexShaderTexts;
 		std::vector<std::string>	PixelShaderTexts;
@@ -507,7 +515,7 @@ namespace ar
 		Shader() {}
 		virtual ~Shader() {}
 
-		virtual bool Initialize(Manager* manager, const void* vs, int32_t vs_size, const void* ps, int32_t ps_size, const std::vector <VertexLayout>& layout) { return false; }
+		virtual bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout) { return false; }
 
 		int32_t GetVertexConstantBufferSize() const { return vertexConstantBufferSize; }
 
@@ -597,6 +605,8 @@ namespace ar
 		Texture() {}
 		virtual ~Texture() {}
 
+		TextureFormat GetFormat() const { return format; }
+
 		virtual TextureType GetType() const = 0;
 	};
 
@@ -636,6 +646,8 @@ namespace ar
 		RenderTexture2D() {}
 		virtual ~RenderTexture2D() {}
 
+		virtual bool Initialize(Manager* manager, int32_t width, int32_t height, TextureFormat format) { return false; }
+
 		TextureType GetType() const override { return TextureType::RenderTexture2D; }
 
 		static RenderTexture2D* Create(Manager* manager);
@@ -648,6 +660,8 @@ namespace ar
 		DepthTexture() {}
 		virtual ~DepthTexture() {}
 
+		virtual bool Initialize(Manager* manager, int32_t width, int32_t height) { return false; }
+
 		TextureType GetType() const override { return TextureType::DepthTexture; }
 
 		static DepthTexture* Create(Manager* manager);
@@ -659,6 +673,8 @@ namespace ar
 	public:
 		CubemapTexture() {}
 		virtual ~CubemapTexture() {}
+
+		virtual bool Initialize(Manager* manager, void* data, int32_t size) { return false; }
 
 		TextureType GetType() const override { return TextureType::CubemapTexture; }
 

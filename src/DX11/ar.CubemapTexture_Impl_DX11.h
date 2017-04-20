@@ -19,7 +19,7 @@ namespace ar
 		CubemapTexture_Impl_DX11();
 		virtual ~CubemapTexture_Impl_DX11();
 
-		bool Initialize(Manager* manager, void* data, int32_t size);
+		bool Initialize(Manager* manager, void* data, int32_t size) override;
 
 		ID3D11ShaderResourceView* GetShaderResourceView() const { return m_textureSRV; }
 	};
