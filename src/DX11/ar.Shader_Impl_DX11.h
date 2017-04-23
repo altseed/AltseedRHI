@@ -27,7 +27,7 @@ namespace ar
 
 		virtual ~Shader_Impl_DX11();
 
-		bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout) override;
+		bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout, bool is32bit) override;
 
 		ID3D11VertexShader* GetVertexShader() const { return vertexShader; }
 		ID3D11PixelShader* GetPixelShader() const { return pixelShader; }

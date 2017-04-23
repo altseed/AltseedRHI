@@ -137,7 +137,7 @@ namespace ar
 		}
 	}
 
-	bool Shader_Impl_GL::Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout)
+	bool Shader_Impl_GL::Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout, bool is32bit)
 	{
 		program = compilerResult.ID;
 		uint16_t byteOffset = 0;

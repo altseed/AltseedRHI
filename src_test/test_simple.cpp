@@ -101,7 +101,7 @@ void test_simple(ar::GraphicsDeviceType device)
 		compilerResult.PixelShaderBuffer = shader_ps;
 	}
 
-	shader->Initialize(manager, compilerResult, vertexLayouts);
+	shader->Initialize(manager, compilerResult, vertexLayouts, false);
 
 	auto context = ar::Context::Create(manager);
 	context->Initialize(manager);

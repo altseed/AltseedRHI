@@ -518,7 +518,7 @@ namespace ar
 		Shader() {}
 		virtual ~Shader() {}
 
-		virtual bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout) { return false; }
+		virtual bool Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout, bool is32bit) { return false; }
 
 		int32_t GetVertexConstantBufferSize() const { return vertexConstantBufferSize; }
 

@@ -157,7 +157,7 @@ namespace ar
 		SafeRelease(inputLayout);
 	}
 
-	bool Shader_Impl_DX11::Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout)
+	bool Shader_Impl_DX11::Initialize(Manager* manager, const ShaderCompilerResult& compilerResult, const std::vector <VertexLayout>& layout, bool is32bit)
 	{
 		auto m = (Manager_Impl_DX11*)manager;
 		HRESULT hr;
