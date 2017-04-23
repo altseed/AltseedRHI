@@ -77,7 +77,7 @@ namespace ar
 				0,
 				&mappedResource);
 
-			memcpy(mappedResource.pData, data, 0);
+			memcpy(mappedResource.pData, data, vertexSize * vertexCount);
 
 			m->GetContext()->Unmap(buffer, 0);
 		}
