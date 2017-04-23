@@ -12,7 +12,7 @@
 namespace ar
 {
 	const int32_t MaxRenderTarget = 4;
-	const int32_t MaxTextureCount = 8;
+	const int32_t MaxTextureCount = 16;
 
 	typedef void(*PNGLoadFunc)(const uint8_t* data, int32_t width, int32_t height, void* userData);
 
