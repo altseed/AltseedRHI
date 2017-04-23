@@ -400,6 +400,16 @@ namespace ar
 
 		virtual std::array<void*, 2> GetInternalObjects() const { return std::array<void*, 2>(); }
 
+		/**
+			@brief	allocate buffer from GPU.
+		*/
+		virtual uint8_t* Alloc(int32_t size, int32_t alignment) { return nullptr; }
+
+		/**
+			@brief	free buffer from GPU.
+		*/
+		virtual void Free(const uint8_t* buffer) { return; }
+
 		GraphicsDeviceType GetDeviceType() const { return deviceType; }
 
 		static Manager* Create(GraphicsDeviceType device);
