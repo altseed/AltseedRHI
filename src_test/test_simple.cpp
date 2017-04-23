@@ -27,14 +27,14 @@ void test_simple(ar::GraphicsDeviceType device)
 	vertexBuffer->Initialize(manager, sizeof(SimpleVertex), 4, false);
 
 	std::array<SimpleVertex, 4> vbuffer;
-	vbuffer[0].x = -1.0f;
-	vbuffer[0].y = 1.0f;
-	vbuffer[1].x = 1.0f;
-	vbuffer[1].y = 1.0f;
-	vbuffer[2].x = 1.0f;
-	vbuffer[2].y = -1.0f;
-	vbuffer[3].x = -1.0f;
-	vbuffer[3].y = -1.0f;
+	vbuffer[0].x = -0.8f;
+	vbuffer[0].y = 0.8f;
+	vbuffer[1].x = 0.8f;
+	vbuffer[1].y = 0.8f;
+	vbuffer[2].x = 0.8f;
+	vbuffer[2].y = -0.8f;
+	vbuffer[3].x = -0.8f;
+	vbuffer[3].y = -0.8f;
 
 	vbuffer[1].r = 0;
 	vbuffer[1].g = 0;
@@ -119,6 +119,13 @@ void test_simple(ar::GraphicsDeviceType device)
 		dparam.IndexBufferPtr = indexBuffer;
 		dparam.ShaderPtr = shader;
 
+		ar::Color clearColor;
+		clearColor.R = 100;
+		clearColor.G = 50;
+		clearColor.B = 30;
+		clearColor.A = 0;
+
+		manager->Clear(true, true, clearColor);
 		context->Begin();
 		context->Draw(dparam);
 		context->End();
