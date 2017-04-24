@@ -1,0 +1,15 @@
+
+in vec2 oUV;
+in vec4 oColor;
+
+out vec4 outputColor;
+
+uniform sampler2D g_texture;
+
+void main() 
+{
+	// varying(in) ‚Í•ÏX•s‰Â(Radeon)
+	vec2 uv = oUV;
+	uv.y = 1.0 - uv.y; 
+	outputColor = oColor * texture(g_texture, oUV);
+}

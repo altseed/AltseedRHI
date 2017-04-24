@@ -5,6 +5,7 @@
     <ClCompile Include="..\src_test\test_simple.cpp" />
     <ClCompile Include="..\src_test\test_texture2d.cpp" />
     <ClCompile Include="..\src_test\common.cpp" />
+    <ClCompile Include="..\src_test\test_renderTarget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src_test\common.h" />

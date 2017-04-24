@@ -1,0 +1,14 @@
+
+in vec3 Pos;
+in vec2 UV;
+in vec4 Color;
+
+out vec2 oUV;
+out vec4 oColor;
+
+void main()
+{
+	gl_Position = vec4(Pos.x,Pos.y,Pos.z,1.0);
+	oUV = vec2(UV.x,UV.y);
+	oColor = Color;
+}
