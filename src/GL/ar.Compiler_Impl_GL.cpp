@@ -164,7 +164,7 @@ namespace ar
 
 		for (auto m : param.Macros)
 		{
-			macros += ("#define " + m.Definition + " " + m.Name + "\r\n");
+			macros += ("#define " + m.Name + " " + m.Definition + "\r\n");
 		}
 
 		vs_src.push_back(macros.c_str());
