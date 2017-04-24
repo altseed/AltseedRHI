@@ -8,6 +8,7 @@ void test_renderTarget(ar::GraphicsDeviceType device)
 	ap::WindowInitializationParameter wparam;
 	wparam.WindowWidth = 640;
 	wparam.WindowHeight = 480;
+	wparam.ColorSpace = ap::ColorSpaceType::LinearSpace;
 	wparam.GraphicsDevice = (ap::GraphicsDeviceType)device;
 
 	window->Initialize(wparam);
@@ -21,6 +22,7 @@ void test_renderTarget(ar::GraphicsDeviceType device)
 	mparam.Handles[0] = window->GetHandle();
 	mparam.WindowWidth = 640;
 	mparam.WindowHeight = 480;
+	mparam.ColorSpace = ar::ColorSpaceType::LinearSpace;
 	manager->Initialize(mparam);
 
 	auto vertexBuffer = ar::VertexBuffer::Create(manager);
@@ -114,7 +116,7 @@ void test_renderTarget(ar::GraphicsDeviceType device)
 	texture->Initialize(manager, textureBuf.data(), textureBuf.size(), false, true);
 
 	ar::RenderTexture2D* renderTarget = ar::RenderTexture2D::Create(manager);
-	renderTarget->Initialize(manager, 512, 512, ar::TextureFormat::R8G8B8A8_UNORM);
+	renderTarget->Initialize(manager, 128, 128, ar::TextureFormat::R8G8B8A8_UNORM);
 
 	while (window->DoEvent())
 	{

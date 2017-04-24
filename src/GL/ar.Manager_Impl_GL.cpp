@@ -35,6 +35,12 @@ namespace ar
 			return ErrorCode::FailedToInitializeGlew;
 		}
 #endif
+
+		if (param.ColorSpace == ColorSpaceType::LinearSpace)
+		{
+			glEnable(GL_FRAMEBUFFER_SRGB);
+		}
+
 		// Create frame buffer
 		glGenFramebuffers(1, &frameBuffer);
 		GLCheckError();
