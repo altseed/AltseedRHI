@@ -150,7 +150,7 @@ namespace ar
 		this->manager = manager;
 
 		GLCheckError();
-		return false;
+		return true;
 	}
 
 	bool Texture2D_Impl_GL::Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB)
