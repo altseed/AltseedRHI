@@ -108,20 +108,38 @@ namespace ar
 			return false;
 		}
 
-		std::vector<uint8_t> resource_rev;
-		FlipYInternal(resource_rev, (const uint8_t*)data, width, height, format);
+		if (data != nullptr)
+		{
+			std::vector<uint8_t> resource_rev;
 
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			intrenalFormat_,
-			width,
-			height,
-			0,
-			format_,
-			type,
-			resource_rev.data());
+			FlipYInternal(resource_rev, (const uint8_t*)data, width, height, format);
 
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				intrenalFormat_,
+				width,
+				height,
+				0,
+				format_,
+				type,
+				resource_rev.data());
+		}
+		else
+		{
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				intrenalFormat_,
+				width,
+				height,
+				0,
+				format_,
+				type,
+				nullptr);
+		}
+		
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		if (glGetError() != GL_NO_ERROR)
