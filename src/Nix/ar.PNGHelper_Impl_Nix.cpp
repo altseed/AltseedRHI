@@ -2,8 +2,9 @@
 
 #define Z_SOLO
 #include <png.h>
-#include <pngstruct.h>
-#include <pnginfo.h>
+
+#include <codecvt>
+#include <locale>
 
 namespace ar
 {
@@ -49,7 +50,7 @@ namespace ar
 		FILE *fp = fopen(utf16_to_utf8(path).c_str(), "wb");
 #endif
 
-		if (fp == nullptr) return;
+		if (fp == nullptr) return false;
 
 		png_structp pp = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop ip = png_create_info_struct(pp);
@@ -79,6 +80,7 @@ namespace ar
 		/* 解放 */
 		png_destroy_write_struct(&pp, &ip);
 		fclose(fp);
+		return true;
 	}
 
 	bool PNGHelper_Impl_Nix::Read(PNGLoadFunc readFunc, void* userData, const void* src, int32_t src_size)
@@ -112,17 +114,19 @@ namespace ar
 		}
 
 		/* RGBA8888フォーマットに変換する */
-		if (png_info->bit_depth < 8)
+		png_byte bit_depth = png_get_bit_depth(png, png_info);
+		if (bit_depth < 8)
 		{
 			png_set_packing(png);
 		}
-		else if (png_info->bit_depth == 16)
+		else if (bit_depth == 16)
 		{
 			png_set_strip_16(png);
 		}
 
 		uint32_t pixelBytes = 4;
-		switch (png_info->color_type)
+		png_byte color_type = png_get_color_type(png, png_info);
+		switch (color_type)
 		{
 		case PNG_COLOR_TYPE_PALETTE:
 		{
@@ -159,18 +163,21 @@ namespace ar
 			break;
 		}
 
-		uint8_t* image = new uint8_t[png_info->width * png_info->height * pixelBytes];
-		uint32_t pitch = png_info->width * pixelBytes;
+		png_uint_32 width = png_get_image_width(png, png_info);
+		png_uint_32 height = png_get_image_height(png, png_info);
+		uint8_t* image = new uint8_t[width * height * pixelBytes];
+		uint32_t pitch = width * pixelBytes;
 
 		// 読み込み
+		bool rev = false; // TODO: Y方向を反転させるフラグをとる必要がある。
 		if (rev)
 		{
 			png_bytepp rp;
 			for (auto pass = 0; pass < number_of_passes; pass++)
 			{
-				for (uint32_t i = 0; i < png_info->height; i++)
+				for (uint32_t i = 0; i < height; i++)
 				{
-					png_read_row(png, &image[(png_info->height - 1 - i) * pitch], NULL);
+					png_read_row(png, &image[(height - 1 - i) * pitch], NULL);
 				}
 			}
 		}
@@ -178,15 +185,15 @@ namespace ar
 		{
 			for (auto pass = 0; pass < number_of_passes; pass++)
 			{
-				for (uint32_t i = 0; i < png_info->height; i++)
+				for (uint32_t i = 0; i < height; i++)
 				{
 					png_read_row(png, &image[i * pitch], NULL);
 				}
 			}
 		}
 
-		auto imagewidth = png_info->width;
-		auto imageheight = png_info->height;
+		auto imagewidth = width;
+		auto imageheight = height;
 		tempBuffer1.resize(imagewidth * imageheight * 4);
 		auto imagedst_ = tempBuffer1.data();
 
