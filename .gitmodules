@@ -1,3 +1,9 @@
 [submodule "Downloads/AltseedPlatform"]
 	path = Downloads/AltseedPlatform
 	url = https://github.com/altseed/AltseedWindowExp
+[submodule "Downloads/libpng"]
+	path = Downloads/libpng
+	url = https://github.com/glennrp/libpng
+[submodule "Downloads/zlib"]
+	path = Downloads/zlib
+	url = https://github.com/madler/zlib
