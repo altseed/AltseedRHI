@@ -102,6 +102,6 @@ if (MSVC)
 endif()
 add_library(AltseedRHI ${cpps} ${hs})
 
-include_directories(../include/)
+include_directories(../include/ ../Downloads/dev/include/)
 
 set_target_properties(AltseedRHI PROPERTIES LINKER_LANGUAGE CXX)
