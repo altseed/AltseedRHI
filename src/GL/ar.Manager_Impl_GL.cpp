@@ -24,6 +24,12 @@ namespace ar
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glDeleteFramebuffers(1, &frameBuffer);
 
+#ifdef __APPLE__
+		glBindVertexArray(0);
+		glDeleteVertexArrays(1, &vao);
+		GLCheckError();
+#endif
+
 		ImageHelper::Terminate();
 	}
 
@@ -53,6 +59,11 @@ namespace ar
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		GLCheckError();
 
+#ifdef __APPLE__
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+		GLCheckError();
+#endif
 
 		windowWidth = param.WindowWidth;
 		windowHeight = param.WindowHeight;
@@ -62,6 +73,7 @@ namespace ar
 		if (GLEW_VERSION_3_1) version = 31;
 		if (GLEW_VERSION_3_2) version = 32;
 		if (GLEW_VERSION_3_3) version = 33;
+		if (GLEW_VERSION_4_0) version = 40;
 
 		return ErrorCode::OK;
 	}

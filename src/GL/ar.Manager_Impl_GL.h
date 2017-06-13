@@ -15,6 +15,10 @@ namespace ar
 
 		int32_t				version = 0;
 
+#ifdef __APPLE__
+		GLuint			vao = 0;
+#endif
+
 		void SetViewport(int32_t x, int32_t y, int32_t width, int32_t height);
 
 	public:
