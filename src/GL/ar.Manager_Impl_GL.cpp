@@ -29,7 +29,10 @@ namespace ar
 
 	ErrorCode Manager_Impl_GL::Initialize(const ManagerInitializationParameter& param)
 	{
-#ifndef __APPLE__
+#ifdef __APPLE__
+		// Fixed version(TODO : Change)
+		version = 33;
+#else
 		if (glewInit() != GLEW_OK)
 		{
 			return ErrorCode::FailedToInitializeGlew;
@@ -54,6 +57,11 @@ namespace ar
 		windowWidth = param.WindowWidth;
 		windowHeight = param.WindowHeight;
 		colorSpaceType = param.ColorSpace;
+
+		version = 21;
+		if (GLEW_VERSION_3_1) version = 31;
+		if (GLEW_VERSION_3_2) version = 32;
+		if (GLEW_VERSION_3_3) version = 33;
 
 		return ErrorCode::OK;
 	}

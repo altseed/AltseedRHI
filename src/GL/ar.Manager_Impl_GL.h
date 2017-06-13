@@ -13,6 +13,8 @@ namespace ar
 	private:
 		GLuint			frameBuffer = 0;
 
+		int32_t				version = 0;
+
 		void SetViewport(int32_t x, int32_t y, int32_t width, int32_t height);
 
 	public:
@@ -32,5 +34,7 @@ namespace ar
 		bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
 		bool SaveTexture(std::vector<Color>& bufs, GLuint texture, int32_t width, int32_t height);
+
+		int32_t GetVersion() const override { return version; }
 	};
 }

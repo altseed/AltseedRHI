@@ -411,6 +411,11 @@ namespace ar
 		*/
 		virtual void Free(const uint8_t* buffer) { return; }
 
+		/**
+			@brief	Get version(Directxx, OpenGLxx, etc)
+		*/
+		virtual int32_t GetVersion() const { return 0; }
+
 		GraphicsDeviceType GetDeviceType() const { return deviceType; }
 
 		static Manager* Create(GraphicsDeviceType device);

@@ -211,6 +211,13 @@ namespace ar
 		windowHeight = param.WindowHeight;
 		colorSpaceType = param.ColorSpace;
 
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_11_0) version = 110;
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_10_1) version = 101;
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_10_0) version = 100;
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_9_3) version = 93;
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_9_2) version = 92;
+		if (currentFeatureLevel == D3D_FEATURE_LEVEL_9_1) version = 91;
+
 		result = ErrorCode::OK;
 		return result;
 

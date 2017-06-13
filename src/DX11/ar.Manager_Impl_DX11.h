@@ -16,6 +16,8 @@ namespace ar
 		IDXGIAdapter1*		adapter = nullptr;
 		IDXGISwapChain*		swapChain = nullptr;
 
+		int32_t				version = 0;
+
 		ID3D11Texture2D*			defaultBack = nullptr;
 		ID3D11RenderTargetView*		defaultBackRenderTargetView = nullptr;
 
@@ -50,6 +52,8 @@ namespace ar
 		std::array<void*, 2> GetInternalObjects() const override;
 
 		bool SaveTexture(std::vector<Color>& dst, ID3D11Resource* texture, int32_t width, int32_t height);
+
+		int32_t GetVersion() const override { return version; }
 
 		ID3D11Device* GetDevice() const { return device; }
 
