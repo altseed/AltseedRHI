@@ -69,11 +69,13 @@ namespace ar
 		windowHeight = param.WindowHeight;
 		colorSpaceType = param.ColorSpace;
 
+#ifndef __APPLE__
 		version = 21;
 		if (GLEW_VERSION_3_1) version = 31;
 		if (GLEW_VERSION_3_2) version = 32;
 		if (GLEW_VERSION_3_3) version = 33;
 		if (GLEW_VERSION_4_0) version = 40;
+#endif
 
 		return ErrorCode::OK;
 	}
