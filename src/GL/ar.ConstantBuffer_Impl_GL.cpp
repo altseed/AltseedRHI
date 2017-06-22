@@ -1,5 +1,5 @@
 ﻿
-#if defined(_WIN32)
+//#if defined(_WIN32)
 
 #include "ar.ConstantBuffer_Impl_GL.h"
 
@@ -24,4 +24,4 @@ namespace ar
 	}
 }
 
-#endif
+//#endif
