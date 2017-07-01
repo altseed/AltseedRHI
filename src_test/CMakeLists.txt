@@ -65,11 +65,34 @@ if (MSVC)
 	endif()
 endif()
 
+set(common_lib)
+set(common_inc)
+
 find_package(OpenGL)
 
 if(MSVC)
 
 else()
+	find_package(OpenGL)
+	list(APPEND common_inc ${OPENGL_INCLUDE_DIR})
+	list(APPEND common_lib ${OPENGL_LIBRARY})
+
+	if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+		# used in GLFW
+		find_library(COCOA_FRAMEWORK Cocoa)
+		find_library(COCOA_FRAMEWORK Cocoa)
+		find_library(IOKIT_FRAMEWORK IOKit)
+		find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
+		find_library(CORE_VIDEO_FRAMEWORK CoreVideo)
+		list(APPEND common_lib
+			${COCOA_FRAMEWORK}
+			${OPENGL_gl_LIBRARY}
+			${OPENGL_glu_LIBRARY}
+			${IOKIT_FRAMEWORK}
+			${CORE_FOUNDATION_FRAMEWORK}
+			${CORE_VIDEO_FRAMEWORK})
+	endif()
+
 	include_directories(../include/ ../Downloads/dev/include/)
 	link_directories(${PROJECT_SOURCE_DIR}/../lib/)
 endif()
@@ -79,7 +102,7 @@ add_executable(AltseedRHI_Test ${cpps} ${hs})
 if(MSVC)
 
 else()
-	target_link_libraries(AltseedRHI_Test AltseedRHI AltseedPlatform glfw3 png16 ${OPENGL_LIBRARIES}) 
+	target_link_libraries(AltseedRHI_Test AltseedRHI AltseedPlatform glfw3 png16 z ${common_lib}) 
 endif()
 
 set_target_properties(AltseedRHI_Test PROPERTIES LINKER_LANGUAGE CXX)
