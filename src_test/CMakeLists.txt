@@ -4,42 +4,6 @@ project(AltseedRHI_Test CXX)
 FILE(GLOB hs *.h)
 FILE(GLOB cpps *.cpp)
 
-if (MSVC)
-	FILE(GLOB hs_dx11 DX11/*.h)
-	FILE(GLOB cpps_dx11 DX11/*.cpp)
-	FILE(GLOB hs_gl GL/*.h)
-	FILE(GLOB cpps_gl GL/*.cpp)
-	FILE(GLOB hs_win Win/*.h)
-	FILE(GLOB cpps_win Win/*.cpp)
-	FILE(GLOB hs_th 3rdParty/*/*.h)
-	FILE(GLOB cpps_th 3rdParty/*/*.cpp)
-
-	list(APPEND hs ${hs_dx11})
-	list(APPEND cpps ${cpps_dx11})
-	list(APPEND hs ${hs_gl})
-	list(APPEND cpps ${cpps_gl})
-	list(APPEND hs ${hs_win})
-	list(APPEND cpps ${cpps_win})
-	list(APPEND hs ${hs_th})
-	list(APPEND cpps ${cpps_th})
-
-else()
-	FILE(GLOB hs_gl GL/*.h)
-	FILE(GLOB cpps_gl GL/*.cpp)
-	FILE(GLOB hs_nix Nix/*.h)
-	FILE(GLOB cpps_nix Nix/*.cpp)
-	FILE(GLOB hs_th 3rdParty/nv_dds/*.h)
-	FILE(GLOB cpps_th 3rdParty/nv_dds/*.cpp)
-
-	list(APPEND hs ${hs_gl})
-	list(APPEND cpps ${cpps_gl})
-	list(APPEND hs ${hs_nix})
-	list(APPEND cpps ${cpps_nix})
-	list(APPEND hs ${hs_th})
-	list(APPEND cpps ${cpps_th})
-
-endif()
-
 foreach(FILE ${hs}) 
     # Get the directory of the source file
     get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
@@ -100,8 +64,16 @@ if (MSVC)
 		endforeach()
 	endif()
 endif()
-add_library(AltseedRHI ${cpps} ${hs})
 
 include_directories(../include/ ../Downloads/dev/include/)
+link_directories(${PROJECT_SOURCE_DIR}/../lib/)
 
-set_target_properties(AltseedRHI PROPERTIES LINKER_LANGUAGE CXX)
+add_executable(AltseedRHI_Test ${cpps} ${hs})
+
+if(MSVC)
+
+else()
+	target_link_libraries(AltseedRHI_Test AltseedRHI glfw3 png) 
+endif()
+
+set_target_properties(AltseedRHI_Test PROPERTIES LINKER_LANGUAGE CXX)
