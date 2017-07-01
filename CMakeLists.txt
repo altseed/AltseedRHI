@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(AltseedRHI CXX)
 
+option(BUILD_TEST "Build test" OFF)
+
 if (MSVC)
 	#
 else()
@@ -8,3 +10,8 @@ else()
 endif()
 
 add_subdirectory(src)
+
+if (BUILD_TEST)
+add_subdirectory(src_test)
+endif()
+
