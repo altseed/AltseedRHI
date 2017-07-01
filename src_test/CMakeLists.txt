@@ -65,15 +65,21 @@ if (MSVC)
 	endif()
 endif()
 
-include_directories(../include/ ../Downloads/dev/include/)
-link_directories(${PROJECT_SOURCE_DIR}/../lib/)
+find_package(OpenGL)
+
+if(MSVC)
+
+else()
+	include_directories(../include/ ../Downloads/dev/include/)
+	link_directories(${PROJECT_SOURCE_DIR}/../lib/)
+endif()
 
 add_executable(AltseedRHI_Test ${cpps} ${hs})
 
 if(MSVC)
 
 else()
-	target_link_libraries(AltseedRHI_Test AltseedRHI glfw3 png) 
+	target_link_libraries(AltseedRHI_Test AltseedRHI AltseedPlatform glfw3 png16 ${OPENGL_LIBRARIES}) 
 endif()
 
 set_target_properties(AltseedRHI_Test PROPERTIES LINKER_LANGUAGE CXX)
