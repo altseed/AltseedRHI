@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(AltseedRHI CXX)
+project(AltseedRHI_Test CXX)
 
 FILE(GLOB hs *.h)
 FILE(GLOB cpps *.cpp)
