@@ -23,10 +23,10 @@ with aceutils.CurrentDir('../Downloads'):
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Debug')
 			aceutils.call(aceutils.cmd_compile + r'ALL_BUILD.vcxproj /p:configuration=Release')
 		elif aceutils.isMac():
-			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX:PATH=../Dev "-DCMAKE_OSX_ARCHITECTURES=x86_64;i386" ../' + pathname + '/build/cmake')
+			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX:PATH=../dev "-DCMAKE_OSX_ARCHITECTURES=x86_64;i386" ../' + pathname + '/build/cmake')
 			aceutils.call(r'make install')
 		else:
-			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX=../Dev ../' + pathname + '/')
+			aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX=../dev ../' + pathname + '/')
 			aceutils.call(r'make install')
 
 	with aceutils.CurrentDir('glew_bin_x64'):
@@ -57,3 +57,5 @@ with aceutils.CurrentDir('../Downloads'):
 
 		aceutils.copy(r'glew_bin_x64/lib/Debug/libglew32d.lib', r'../lib/x64/Debug/')
 		aceutils.copy(r'glew_bin_x64/lib/Release/libglew32.lib', r'../lib/x64/Release/')
+	else:
+		aceutils.copy(r'dev/lib/libGLEW.a', r'../lib/')

@@ -8,6 +8,6 @@ void test_renderTarget(ar::GraphicsDeviceType device);
 
 int main()
 {
-	test_renderTarget(ar::GraphicsDeviceType::DirectX11);
+	test_simple(ar::GraphicsDeviceType::OpenGL);
 	return 0;
 }

@@ -52,3 +52,6 @@ else:
 	aceutils.rm(r'dev/lib/libpng16.dylib')
 	aceutils.rm(r'dev/lib/libpng16.16.dylib')
 	aceutils.rm(r'dev/lib/libpng16.16.21.0.dylib')
+
+	aceutils.copy(r'dev/lib/libpng16.a', r'../lib/')
+	aceutils.copy(r'dev/lib/libz.a', r'../lib/')

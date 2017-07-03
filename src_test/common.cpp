@@ -66,6 +66,12 @@ bool LoadShaderFile(std::vector<uint8_t>& dst, const char* path, ar::GraphicsDev
 	{
 		p = std::string("HLSL/") + std::string(path);
 	}
+#else
+    if (device == ar::GraphicsDeviceType::OpenGL)
+    {
+        p = std::string("GLSL_3/") + std::string(path);
+        isScriptMode = true;
+    }
 #endif
 
 	auto fp = fopen(p.c_str(), "rb");
