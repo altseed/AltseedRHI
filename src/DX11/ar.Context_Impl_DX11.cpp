@@ -290,7 +290,16 @@ namespace ar
 		// Set shader
 		context->VSSetShader(shader->GetVertexShader(), NULL, 0);
 		context->PSSetShader(shader->GetPixelShader(), NULL, 0);
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		if (param.Topology == TopologyMode::Triangles)
+		{
+			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		}
+		if (param.Topology == TopologyMode::Lines)
+		{
+			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		}
+
 		context->IASetInputLayout(shader->GetInputLayout());
 
 		// set textures

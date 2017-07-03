@@ -321,10 +321,20 @@ namespace ar
 		int32_t indexType = ib->GetIs32Bit() ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
 		int32_t isize = ib->GetIs32Bit() ? 4 : 2;
 
+		int32_t topology = GL_TRIANGLES;
+		if (param.Topology == TopologyMode::Triangles)
+		{
+			topology = GL_TRIANGLES;
+		}
+		if (param.Topology == TopologyMode::Lines)
+		{
+			topology = GL_LINES;
+		}
+
 		if (param.InstanceCount == 1)
 		{
 			glDrawElements(
-				GL_TRIANGLES, 
+				topology,
 				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
 				indexType, 
 				(void*)(param.IndexOffset * isize));
@@ -332,7 +342,7 @@ namespace ar
 		else
 		{
 			glDrawElementsInstanced(
-				GL_TRIANGLES, 
+				topology,
 				param.IndexCount == 0 ? ib->GetIndexCount() : param.IndexCount,
 				indexType,
 				(void*)(param.IndexOffset * isize),

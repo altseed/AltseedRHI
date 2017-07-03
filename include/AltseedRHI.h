@@ -110,6 +110,11 @@ namespace ar
 		DepthTexture = 3,
 	};
 
+	enum class TopologyMode : int32_t
+	{
+		Triangles,
+		Lines,
+	};
 	/**
 	@brief	描画時のブレンドモードを表す列挙体
 	*/
@@ -344,6 +349,7 @@ namespace ar
 		bool			IsDepthTest = false;
 		bool			IsDepthWrite = false;
 		CullingType		Culling = CullingType::Front;
+		TopologyMode	Topology = TopologyMode::Triangles;
 
 		int32_t			VertexOffset = 0;
 		int32_t			IndexOffset = 0;
