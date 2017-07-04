@@ -39,6 +39,8 @@ namespace ar
 
 		bool SaveTexture(std::vector<Color>& bufs, GLuint texture, int32_t width, int32_t height);
 
+		void ApplyVAO();
+
 		int32_t GetVersion() const override { return version; }
 	};
 }

@@ -209,6 +209,14 @@ namespace ar
 		return true;
 	}
 
+	void Manager_Impl_GL::ApplyVAO()
+	{
+#ifdef __APPLE__
+		glBindVertexArray(vao);
+		GLCheckError();
+#endif
+	}
+
 	bool Manager_Impl_GL::SaveTexture(std::vector<Color>& dst, GLuint texture, int32_t width, int32_t height)
 	{
 		GLCheckError();

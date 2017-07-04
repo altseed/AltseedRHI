@@ -11,6 +11,7 @@ namespace ar
 		: public Context
 	{
 	private:
+		Manager*									manager = nullptr;
 		DrawParameter								previousDrawParam;
 
 		std::array<GLuint, MaxTextureCount>			samplers;

@@ -126,6 +126,9 @@ namespace ar
 	{
 		samplers.fill(0);
 		glGenSamplers(MaxTextureCount, samplers.data());
+
+		this->manager = manager;
+
 		return true;
 	}
 
@@ -151,6 +154,9 @@ namespace ar
 		if (vb->GetBuffer() == 0) return;
 		if (ib->GetBuffer() == 0) return;
 		if (shader->GetShader() == 0) return;
+
+		auto m = (Manager_Impl_GL*)manager;
+		m->ApplyVAO();
 
 		UpdateRenderStates(param, false);
 
