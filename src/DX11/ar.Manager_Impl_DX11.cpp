@@ -29,6 +29,13 @@ namespace ar
 
 	Manager_Impl_DX11::~Manager_Impl_DX11()
 	{
+		BOOL isScreenMode = FALSE;
+		swapChain->GetFullscreenState(&isScreenMode, 0);
+		if (isScreenMode)
+		{
+			swapChain->SetFullscreenState(FALSE, 0);
+		}
+
 		for (auto& v : currentBackRenderTargetViews)
 		{
 			SafeRelease(v);
@@ -371,6 +378,8 @@ namespace ar
 		{
 			swapChain->SetFullscreenState(FALSE, 0);
 		}
+
+		
 
 		return true;
 	}
