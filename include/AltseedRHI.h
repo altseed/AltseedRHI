@@ -400,6 +400,8 @@ namespace ar
 
 		virtual bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) { return false; }
 
+		virtual bool GetIsFullscreenMode() { return false; }
+
 		virtual bool SetIsFullscreenMode(bool isFullscreenMode) { return false; }
 
 		virtual bool SetWindowSize(int32_t width, int32_t height) { return false; }

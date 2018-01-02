@@ -362,6 +362,13 @@ namespace ar
 		return ret;
 	}
 
+	bool Manager_Impl_DX11::GetIsFullscreenMode()
+	{
+		BOOL isScreenMode = FALSE;
+		swapChain->GetFullscreenState(&isScreenMode, 0);
+		return isScreenMode;
+	}
+
 	bool Manager_Impl_DX11::SetIsFullscreenMode(bool isFullscreenMode)
 	{
 		BOOL isScreenMode = FALSE;

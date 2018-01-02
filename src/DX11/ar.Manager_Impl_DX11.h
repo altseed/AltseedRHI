@@ -45,6 +45,8 @@ namespace ar
 
 		bool SaveScreen(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
+		bool GetIsFullscreenMode() override;
+
 		bool SetIsFullscreenMode(bool isFullscreenMode) override;
 
 		bool SetWindowSize(int32_t width, int32_t height) override;
