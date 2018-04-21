@@ -34,6 +34,8 @@ public:
 	virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
 	ID3D11ShaderResourceView* GetShaderResourceView() const { return textureSRV; }
+
+	uint64_t GetInternalObject() const override { return (uint64_t)texture; }
 };
 
 }

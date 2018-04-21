@@ -32,6 +32,8 @@ public:
 	virtual bool Save(std::vector<Color>& dst, int32_t& width, int32_t& height) override;
 
 	GLuint GetTexture() const { return texture; }
+
+	uint64_t GetInternalObject() const override { return texture; }
 };
 
 }
