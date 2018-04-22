@@ -661,6 +661,8 @@ namespace ar
 
 		TextureType GetType() const override { return TextureType::Texture2D; }
 
+		virtual uint64_t GetInternalObject() const { return 0; }
+
 		static Texture2D* Create(Manager* manager);
 	};
 
