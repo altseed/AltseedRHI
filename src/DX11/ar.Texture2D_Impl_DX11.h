@@ -35,7 +35,7 @@ public:
 
 	ID3D11ShaderResourceView* GetShaderResourceView() const { return textureSRV; }
 
-	uint64_t GetInternalObject() const override { return (uint64_t)texture; }
+	std::array<uint64_t, 2> GetInternalObjects() const override { return std::array<uint64_t, 2> { (uint64_t)texture, (uint64_t)textureSRV}; }
 };
 
 }

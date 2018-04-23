@@ -33,7 +33,7 @@ public:
 
 	GLuint GetTexture() const { return texture; }
 
-	uint64_t GetInternalObject() const override { return texture; }
+	std::array<uint64_t, 2> GetInternalObjects() const override { return std::array<uint64_t, 2> { (uint64_t)texture, 0 }; }
 };
 
 }

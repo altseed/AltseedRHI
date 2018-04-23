@@ -11,7 +11,9 @@ with aceutils.CurrentDir('../Downloads'):
 	aceutils.rmdir(r"glew_bin")
 	aceutils.rmdir(r"glew_bin_x64")
 
-	aceutils.wget(r'https://sourceforge.net/projects/glew/files/glew/1.13.0/glew-1.13.0.zip')
+	#aceutils.wget(r'https://sourceforge.net/projects/glew/files/glew/1.13.0/glew-1.13.0.zip')
+	aceutils.wget(r'http://sourceforge.net/projects/glew/files/glew/1.13.0/glew-1.13.0.zip')
+
 	aceutils.unzip(r'glew-1.13.0.zip')
 	aceutils.editCmakeForACE(pathname + r'/build/cmake/CMakeLists.txt')
 	aceutils.mkdir(r"glew_bin")
