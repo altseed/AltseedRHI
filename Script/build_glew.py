@@ -1,5 +1,9 @@
 import aceutils
 
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
 pathname = 'glew-1.13.0'
 
 aceutils.cdToScript()
