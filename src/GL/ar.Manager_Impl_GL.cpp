@@ -209,6 +209,13 @@ namespace ar
 		return true;
 	}
 
+	bool Manager_Impl_GL::SetWindowSize(int32_t width, int32_t height)
+	{
+		windowWidth = width;
+		windowHeight = height;
+		return true;
+	}
+
 	void Manager_Impl_GL::ApplyVAO()
 	{
 #ifdef __APPLE__
