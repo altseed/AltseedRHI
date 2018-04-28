@@ -8,7 +8,8 @@ aceutils.mkdir('../Downloads')
 with aceutils.CurrentDir('../Downloads'):
 
 	# Build dependencies
-	aceutils.call(sys.executable + ' AltseedPlatform/Script/build_glfw.py')
+	glfw_args = ' '.join('"{0}"'.format(w) for w in sys.argv[1:])
+	aceutils.call(sys.executable + ' AltseedPlatform/Script/build_glfw.py ' + glfw_args)
 
 	# Comple
 	aceutils.rmdir(r"AltseedPlatform_bin")
