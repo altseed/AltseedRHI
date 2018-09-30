@@ -29,6 +29,8 @@ public:
 	ID3D11RenderTargetView* GetRenderTargetView() const { return textureRTV; }
 
 	ID3D11ShaderResourceView* GetShaderResourceView() const { return textureSRV; }
+
+	virtual std::array<uint64_t, 2> GetInternalObjects() const override { return std::array<uint64_t, 2> { (uint64_t)texture, (uint64_t)textureSRV}; }
 };
 
 }
