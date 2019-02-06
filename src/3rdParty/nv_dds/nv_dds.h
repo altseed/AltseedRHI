@@ -191,6 +191,7 @@ public:
     unsigned int get_components() {
         return m_components;
     }
+
     unsigned int get_format() {
         return m_format;
     }
@@ -236,6 +237,8 @@ private:
 
     unsigned int m_format;
     unsigned int m_components;
+	unsigned int m_depth;
+
     TextureType m_type;
     bool m_valid;
 

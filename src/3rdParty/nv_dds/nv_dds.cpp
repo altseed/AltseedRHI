@@ -225,6 +225,7 @@ const uint32_t DDSF_VOLUME = 0x00200000;
 const uint32_t FOURCC_DXT1 = 0x31545844; //(MAKEFOURCC('D','X','T','1'))
 const uint32_t FOURCC_DXT3 = 0x33545844; //(MAKEFOURCC('D','X','T','3'))
 const uint32_t FOURCC_DXT5 = 0x35545844; //(MAKEFOURCC('D','X','T','5'))
+const uint32_t FOURCC_R32G32B32A32_FLOAT = 116;
 
 struct DDS_PIXELFORMAT {
     uint32_t dwSize;
@@ -415,7 +416,7 @@ void flip_blocks_dxtc5(DXTColBlock *line, unsigned int numBlocks) {
 ///////////////////////////////////////////////////////////////////////////////
 // default constructor
 CDDSImage::CDDSImage() :
-        m_format(0), m_components(0), m_type(TextureNone), m_valid(false) {
+        m_format(0), m_components(0), m_depth(0), m_type(TextureNone), m_valid(false) {
 }
 
 CDDSImage::~CDDSImage() {
@@ -545,15 +546,23 @@ void CDDSImage::load(istream& is, bool flipImage) {
         case FOURCC_DXT1:
             m_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
             m_components = 3;
+			m_depth = 1;
             break;
         case FOURCC_DXT3:
             m_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
             m_components = 4;
+			m_depth = 1;
             break;
         case FOURCC_DXT5:
             m_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
             m_components = 4;
+			m_depth = 1;
             break;
+		case FOURCC_R32G32B32A32_FLOAT:
+			m_format = GL_RGBA;
+			m_components = 4;
+			m_depth = 4;
+			break;
         default:
             throw runtime_error("unknown texture compression '"+fourcc(ddsh.ddspf.dwFourCC)+"'");
         }
@@ -564,6 +573,7 @@ void CDDSImage::load(istream& is, bool flipImage) {
                ddsh.ddspf.dwABitMask == 0xFF000000) {
         m_format = GL_BGRA_EXT;
         m_components = 4;
+		m_depth = 1;
     } else if (ddsh.ddspf.dwRGBBitCount == 32 &&
                ddsh.ddspf.dwRBitMask == 0x000000FF &&
                ddsh.ddspf.dwGBitMask == 0x0000FF00 &&
@@ -571,21 +581,25 @@ void CDDSImage::load(istream& is, bool flipImage) {
                ddsh.ddspf.dwABitMask == 0xFF000000) {
         m_format = GL_RGBA;
         m_components = 4;
+		m_depth = 1;
     } else if (ddsh.ddspf.dwRGBBitCount == 24 &&
                ddsh.ddspf.dwRBitMask == 0x000000FF &&
                ddsh.ddspf.dwGBitMask == 0x0000FF00 &&
                ddsh.ddspf.dwBBitMask == 0x00FF0000) {
         m_format = GL_RGB;
         m_components = 3;
+		m_depth = 1;
     } else if (ddsh.ddspf.dwRGBBitCount == 24 &&
                ddsh.ddspf.dwRBitMask == 0x00FF0000 &&
                ddsh.ddspf.dwGBitMask == 0x0000FF00 &&
                ddsh.ddspf.dwBBitMask == 0x000000FF) {
         m_format = GL_BGR_EXT;
         m_components = 3;
+		m_depth = 1;
     } else if (ddsh.ddspf.dwRGBBitCount == 8) {
         m_format = GL_LUMINANCE;
         m_components = 1;
+		m_depth = 1;
     } else {
         throw runtime_error("unknow texture format");
     }
@@ -595,6 +609,11 @@ void CDDSImage::load(istream& is, bool flipImage) {
     width = ddsh.dwWidth;
     height = ddsh.dwHeight;
     depth = clamp_size(ddsh.dwDepth);   // set to 1 if 0
+
+	if (m_depth > 0)
+	{
+		depth = m_depth;
+	}
 
     // use correct size calculation function depending on whether image is
     // compressed
@@ -794,6 +813,7 @@ void CDDSImage::save(const std::string& filename, bool flipImage) {
 // free image memory
 void CDDSImage::clear() {
     m_components = 0;
+	m_depth = 0;
     m_format = 0;
     m_type = TextureNone;
     m_valid = false;
