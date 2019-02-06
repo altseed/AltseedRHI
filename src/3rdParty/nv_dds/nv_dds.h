@@ -192,6 +192,10 @@ public:
         return m_components;
     }
 
+	unsigned int get_componentSize() {
+		return m_componentSize;
+	}
+
     unsigned int get_format() {
         return m_format;
     }
@@ -237,7 +241,7 @@ private:
 
     unsigned int m_format;
     unsigned int m_components;
-	unsigned int m_depth;
+	unsigned int m_componentSize;
 
     TextureType m_type;
     bool m_valid;

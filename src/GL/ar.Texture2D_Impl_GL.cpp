@@ -199,7 +199,7 @@ namespace ar
 			d.resize(src_size);
 			memcpy(d.data(), src, src_size);
 			nv_dds::CDDSImage image;
-			std::istringstream stream(std::string(d.begin(), d.end()));
+			IMemoryStream stream(d.data(), d.size());
 			image.load(stream);
 
 			if (image.get_format() == GL_RGBA)

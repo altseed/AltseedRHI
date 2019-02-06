@@ -31,7 +31,7 @@ namespace ar
 		memcpy(temp.data(), data, size);
 
 		nv_dds::CDDSImage image;
-		std::istringstream stream(std::string(temp.begin(), temp.end()));
+		IMemoryStream stream(temp.data(), temp.size());
 		image.load(stream);
 
 		auto m = (Manager_Impl_GL*)manager;
@@ -82,7 +82,7 @@ namespace ar
 						mipmap);
 				}
 			}
-			if (image.get_depth() == 4)
+			if (image.get_componentSize() == 4)
 			{
 				format = TextureFormat::R32G32B32A32_FLOAT;
 

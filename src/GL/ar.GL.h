@@ -10,6 +10,9 @@
 #include <OpenGL/gl3.h>
 #endif
 
+#include <streambuf>
+#include <istream>
+
 #include "../ar.BaseInternal.h"
 #include "../ar.ImageHelper.h"
 
@@ -34,6 +37,25 @@ static std::vector<GLenum> GLCheckError_Impl(const char *file, const int line)
 
 namespace ar
 {
+	struct MemoryStreamBuf 
+		: public std::streambuf
+	{
+		MemoryStreamBuf(const void* data, size_t size)
+		{
+			auto p = (char*)(data);
+			this->setg(p, p, p + size);
+		}
+	};
+	struct IMemoryStream : 
+		virtual public MemoryStreamBuf, std::istream
+	{
+		IMemoryStream(const void* data, size_t size)
+			: MemoryStreamBuf(data, size)
+			, std::istream(static_cast<std::streambuf*>(this)) 
+		{
+		}
+	};
+
 	static void FlipYInternal(std::vector<uint8_t> &dst, const uint8_t* src, int32_t width, int32_t height, TextureFormat format)
 	{
 		auto pitch = ImageHelper::GetPitch(format);
