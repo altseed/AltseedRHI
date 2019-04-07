@@ -28,10 +28,8 @@ with aceutils.CurrentDir('../Downloads'):
         if aceutils.isWin():
             aceutils.call(
                 aceutils.cmd_cmake+r'-UGLEW_USE_STATIC_LIBS ../' + pathname + '/build/cmake')
-            aceutils.call(aceutils.cmd_compile +
-                          r'ALL_BUILD.vcxproj /p:configuration=Debug')
-            aceutils.call(aceutils.cmd_compile +
-                          r'ALL_BUILD.vcxproj /p:configuration=Release')
+            aceutils.call('cmake --build . --config Debug')
+            aceutils.call('cmake --build . --config Release')
         elif aceutils.isMac():
             aceutils.call(r'cmake -G "Unix Makefiles" -UGLEW_USE_STATIC_LIBS -D CMAKE_INSTALL_PREFIX:PATH=../dev "-DCMAKE_OSX_ARCHITECTURES=x86_64' +
                           (';i386' if aceutils.Isi386() else '') + r'" ../' + pathname + '/build/cmake')
@@ -45,10 +43,8 @@ with aceutils.CurrentDir('../Downloads'):
         if aceutils.isWin():
             aceutils.call(aceutils.cmd_cmake_x64 +
                           r'-UGLEW_USE_STATIC_LIBS ../' + pathname + '/build/cmake')
-            aceutils.call(aceutils.cmd_compile +
-                          r'ALL_BUILD.vcxproj /p:configuration=Debug')
-            aceutils.call(aceutils.cmd_compile +
-                          r'ALL_BUILD.vcxproj /p:configuration=Release')
+            aceutils.call('cmake --build . --config Debug')
+            aceutils.call('cmake --build . --config Release')
 
     if aceutils.isWin():
         aceutils.mkdir(r'../lib/')

@@ -23,10 +23,8 @@ with aceutils.CurrentDir('../Downloads'):
         if aceutils.isWin():
             aceutils.call(
                 aceutils.cmd_cmake+r'-D USE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=OFF ../AltseedPlatform/')
-            aceutils.call(aceutils.cmd_compile +
-                          r'AltseedPlatform.sln /p:configuration=Debug')
-            aceutils.call(aceutils.cmd_compile +
-                          r'AltseedPlatform.sln /p:configuration=Release')
+            aceutils.call('cmake --build . --config Debug')
+            aceutils.call('cmake --build . --config Release')
         elif aceutils.isMac():
             aceutils.call(r'cmake -G "Unix Makefiles" -D USE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=OFF "-DCMAKE_OSX_ARCHITECTURES=x86_64' +
                           (';i386' if aceutils.Isi386() else '') + r'" ../AltseedPlatform/')
@@ -40,10 +38,8 @@ with aceutils.CurrentDir('../Downloads'):
         if aceutils.isWin():
             aceutils.call(aceutils.cmd_cmake_x64 +
                           r'-D USE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=OFF ../AltseedPlatform/')
-            aceutils.call(aceutils.cmd_compile +
-                          r'AltseedPlatform.sln /p:configuration=Debug')
-            aceutils.call(aceutils.cmd_compile +
-                          r'AltseedPlatform.sln /p:configuration=Release')
+            aceutils.call('cmake --build . --config Debug')
+            aceutils.call('cmake --build . --config Release')
 
     aceutils.mkdir(r'../include/')
     aceutils.mkdir(r'../lib/')
