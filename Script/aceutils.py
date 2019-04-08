@@ -245,8 +245,8 @@ if isWin():
 
     elif args.vs2019:
         # vs2015
-        cmd_cmake = r'cmake -G "Visual Studio 16" '
-        cmd_cmake_x64 = r'cmake -G "Visual Studio 16" -a x64 '
+        cmd_cmake = r'cmake -G "Visual Studio 16" -A win32 '
+        cmd_cmake_x64 = r'cmake -G "Visual Studio 16" -A x64 '
         cmd_compile = r'"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild" '
 
     elif args.vs2015:
