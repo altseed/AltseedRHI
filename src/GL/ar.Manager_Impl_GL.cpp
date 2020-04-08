@@ -35,14 +35,14 @@ namespace ar
 
 	ErrorCode Manager_Impl_GL::Initialize(const ManagerInitializationParameter& param)
 	{
-#ifdef __APPLE__
-		// Fixed version(TODO : Change)
-		version = 33;
-#else
+#ifdef _WIN32
 		if (glewInit() != GLEW_OK)
 		{
 			return ErrorCode::FailedToInitializeGlew;
 		}
+#else
+		// Fixed version(TODO : Change)
+		version = 33;
 #endif
 
 		if (param.ColorSpace == ColorSpaceType::LinearSpace)
@@ -69,7 +69,7 @@ namespace ar
 		windowHeight = param.WindowHeight;
 		colorSpaceType = param.ColorSpace;
 
-#ifndef __APPLE__
+#ifdef _WIN32
 		version = 21;
 		if (GLEW_VERSION_3_1) version = 31;
 		if (GLEW_VERSION_3_2) version = 32;
