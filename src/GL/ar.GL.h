@@ -2,12 +2,19 @@
 #pragma once
 
 #if defined(_WIN32)
+
 #define GLEW_STATIC
 #include <GL/glew.h>
-#endif
 
-#if defined(__APPLE__)
+#elif defined(__APPLE__)
+
 #include <OpenGL/gl3.h>
+
+#else
+
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+
 #endif
 
 #include <streambuf>
