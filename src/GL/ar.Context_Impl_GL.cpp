@@ -7,7 +7,7 @@
 #include "ar.Shader_Impl_GL.h"
 
 #include "ar.Texture2D_Impl_GL.h"
-#include "ar.CubeMapTexture_Impl_GL.h"
+#include "ar.CubemapTexture_Impl_GL.h"
 #include "ar.RenderTexture2D_Impl_GL.h"
 #include "ar.DepthTexture_Impl_GL.h"
 
