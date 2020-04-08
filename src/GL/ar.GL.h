@@ -19,6 +19,7 @@
 
 #include <streambuf>
 #include <istream>
+#include <string.h>
 
 #include "../ar.BaseInternal.h"
 #include "../ar.ImageHelper.h"
