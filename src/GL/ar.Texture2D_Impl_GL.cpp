@@ -145,7 +145,7 @@ namespace ar
 		if (glGetError() != GL_NO_ERROR)
 		{
 			glDeleteTextures(1, &texture);
-			return nullptr;
+			return false;
 		}
 
 		if (isEditable)
@@ -173,7 +173,7 @@ namespace ar
 
 	bool Texture2D_Impl_GL::Initialize(Manager* manager, const void* src, int32_t src_size, bool isEditable, bool isSRGB)
 	{
-		if (src_size == 0) return nullptr;
+		if (src_size == 0) return false;
 
 		if (ImageHelper::IsPNG(src, src_size))
 		{
