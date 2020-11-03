@@ -11,8 +11,6 @@ endif()
 
 # MSVC Flag
 if(MSVC)
-  string(PREPEND CMAKE_CXX_FLAGS "/DNOMINMAX ")
-
   if(POLICY CMP0091)
 
     cmake_policy(GET CMP0091 CMP0091_STATE)
